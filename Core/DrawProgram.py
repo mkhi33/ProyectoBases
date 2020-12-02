@@ -16,8 +16,8 @@ class GoToCommand:
         turtle.pencolor(self.color)
         turtle.goto(self.x, self.y)
     def __str__(self):
-        return '<Command x ="'+ str(self.x) + '" y="' + str(self.y) + '" width="' + str(self.width) + '" color="' + self.color + '">GoTo</Command>'
-
+        return '<Command x="' + str(self.x) + '" y="' + str(self.y) + '" width="' + \
+            str(self.width) + '" color="' + self.color + '">GoTo</Command>'
 class CircleCommand:
     def __init__(self, radius, width = 1, color = "black"):
         self.radius = radius
@@ -29,8 +29,8 @@ class CircleCommand:
         turtle.circle(self.radius)
     
     def __str__(self):
-        return '<Command radius="'+ str(self.radius) + '" width="' + str(self.width) + '" color="' + self.color + '">Circle</Command>'
-
+        return '<Command radius="' + str(self.radius) + '" width="' + \
+            str(self.width) + '" color="' + self.color + '">Circle</Command>'
 class BeginFillCommand:
     def __init__(self, color):
         self.color = color
@@ -39,7 +39,7 @@ class BeginFillCommand:
         turtle.fillcolor(self.color)
         turtle.begin_fill()
     def __str__(self):
-        return "<Command>EndFill </Command>" 
+        return '<Command color="'+ self.color + '">BeginFill </Command' 
 class EndFillCommand:
     def __init__(self):
         pass
@@ -50,7 +50,13 @@ class EndFillCommand:
 class PenUpCommand:
     def __init__(self):
         pass
-
+    def draw(self, turtle):
+        turtle.penup()
+    def __str__(self):
+        return "<Command>PenUp</Command>"
+class PenDownCommand:
+    def __init__(self):
+        pass
     def draw(self, turtle):
         turtle.pendown()
     def __str__(self):
@@ -83,7 +89,7 @@ class DrawingApplication(tkinter.Frame):
 
         def newWindow():
             #graphicsCommands = PyList()
-            theTurtle.clear()
+            theTurtle.pen()
             theTurtle.penup()
             theTurtle.goto(0,0)
             theTurtle.pendown()
@@ -99,7 +105,7 @@ class DrawingApplication(tkinter.Frame):
             for commandElement in graphicsCommands:
                 print(type(commandElement))
                 command = commandElement.firstChild.data.strip()
-                attr = commandElement.atributes
+                attr = commandElement.attributes
                 if command == "GoTo":
                     x = float(attr["x"].value)
                     y = float(attr["y"].value)
@@ -134,6 +140,10 @@ class DrawingApplication(tkinter.Frame):
 
             newWindow()
 
+            self.graphicsCommands = PyList()
+
+            parse(filename)
+
             for cmd in self.graphicsCommands:
                 cmd.draw(theTurtle)
 
@@ -154,7 +164,7 @@ class DrawingApplication(tkinter.Frame):
             cmd = GoToCommand(0,0,1,"#000000")
             self.graphicsCommands.append(cmd)
             cmd = PenDownCommand()
-            cmd = PenDownCommand.append(cmd)
+            self.graphicsCommand.append(cmd)
             screen.update()
             parse(filename)
 
@@ -179,6 +189,7 @@ class DrawingApplication(tkinter.Frame):
         def saveFile():
             filename = tkinter.filedialog.asksaveasfilename(title= "Save Picture As ...")
             write(filename)
+
         fileMenu.add_command(label = "Save As ...", command = saveFile)
 
         fileMenu.add_command(label = "Exit", command = self.master.quit)
@@ -211,10 +222,10 @@ class DrawingApplication(tkinter.Frame):
         radiusLabel.pack()
         radiusSize = tkinter.StringVar()
         radiusEntry = tkinter.Entry(sideBar, textvariable= radiusSize)
+        radiusSize.set(str(10))
         radiusEntry.pack()
     
         def circleHandler():
-            print(radiusSize.get())
             cmd = CircleCommand(float(radiusSize.get()), float(widthSize.get()), penColor.get())
             cmd.draw(theTurtle)
             self.graphicsCommands.append(cmd)
@@ -224,6 +235,7 @@ class DrawingApplication(tkinter.Frame):
             
         circleButton = tkinter.Button(sideBar, text="Draw Circle", command=circleHandler)
         circleButton.pack(fill=tkinter.BOTH)
+
         screen.colormode(255)
         penLabel = tkinter.Label(sideBar, text = "Pen Color")
         penLabel.pack()
@@ -287,6 +299,15 @@ class DrawingApplication(tkinter.Frame):
             
         penUpButton = tkinter.Button(sideBar, text = "Pen Up", command=penUpHandler)
         penUpButton.pack(fill=tkinter.BOTH)
+
+        def penDownHandler():
+            cmd = PenDownCommand()
+            cmd.draw(theTurtle)
+            penLabel.configure(text="Pen Is Down")
+            self.graphicsCommands.appen(cmd)
+
+        penDownButton = tkinter.Button(sideBar, text = "Pen Down", command = penDownHandler)
+        penDownButton.pack(fill=tkinter.BOTH)
         
         def clickHandler(x,y):
             cmd = GoToCommand(x,y,float(widthSize.get()), penColor.get())
@@ -324,14 +345,3 @@ class DrawingApplication(tkinter.Frame):
                 
         screen.onkeypress(undoHandler, "u")
         screen.listen()
-
-
-def main():
-    root = tkinter.Tk()
-    drawingApp = DrawingApplication(root)
-    
-    drawingApp.mainloop()
-    print("Program Execution Completed.")
-
-if __name__ == "__main__":
-    main()
