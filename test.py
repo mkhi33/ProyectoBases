@@ -1,6 +1,12 @@
 from Core.ConnectionConfig import ConnectionConfig
 from Core.MySqlEngine import MySqlEngine
 
+"""
+En este script se hacen las pruebas para el proyecto:
+
+    la clase MySqlEngine tiene la referencia a la base de datos.
+"""
+
 config = ConnectionConfig("localhost","3306", "admin", "admin", "DataBaseA")
 
 engine = MySqlEngine(config)
@@ -13,8 +19,12 @@ def registryFullName(userName, name, lastName):
                            ('%s', '%s', '%s') """%(userName, name, lastName)
     engine.insert(query)
     
-    
+def updateUser(obj):
+    pass
 
-registryFullName("@user01", "Nombre", "Apellido")
+def delete(id):
+    # Tambien puede recibir como parametro el nombre de usuario
+    pass
+#registryFullName("@user01", "Nombre", "Apellido")
 
 
