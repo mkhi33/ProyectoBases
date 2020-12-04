@@ -7,20 +7,6 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
 
 
-
-
-"""
-def main():
-
-    root = tkinter.Tk()
-    drawingApp = DrawingApplication(root)
-
-    drawingApp.mainloop()
-    print("Ejecución completada")
-
-if __name__ == "__main__":
-    main()
-"""
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main = GUILogin()

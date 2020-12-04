@@ -12,3 +12,4 @@ class GuiDialogNotification(QDialog):
         self.uiNotification = Ui_Dialog()
         self.uiNotification.setupUi(self)
         
+        

@@ -11,5 +11,7 @@ class GUIAdmin(QMainWindow):
         super(GUIAdmin, self).__init__(parent)
         self.uiAdmin = Ui_MainWindow()
         self.uiAdmin.setupUi(self)
+
+        
         
         

@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(170, 120, 171, 17))
+        self.label_3.setGeometry(QtCore.QRect(180, 120, 171, 17))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -84,10 +84,10 @@ class Ui_MainWindow(object):
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.dteDate = QtWidgets.QDateEdit(self.centralwidget)
-        self.dteDate.setGeometry(QtCore.QRect(490, 210, 110, 26))
+        self.dteDate.setGeometry(QtCore.QRect(180, 270, 110, 26))
         self.dteDate.setObjectName("dteDate")
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
-        self.label_5.setGeometry(QtCore.QRect(490, 190, 191, 17))
+        self.label_5.setGeometry(QtCore.QRect(180, 250, 191, 17))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(10, 300, 911, 171))
+        self.tableWidget.setGeometry(QtCore.QRect(10, 360, 911, 171))
         self.tableWidget.setRowCount(10)
         self.tableWidget.setColumnCount(7)
         self.tableWidget.setObjectName("tableWidget")
@@ -115,7 +115,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(6, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(140)
         self.label_6 = QtWidgets.QLabel(self.centralwidget)
-        self.label_6.setGeometry(QtCore.QRect(10, 270, 911, 31))
+        self.label_6.setGeometry(QtCore.QRect(10, 330, 911, 31))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -126,7 +126,7 @@ class Ui_MainWindow(object):
         self.label_6.setAlignment(QtCore.Qt.AlignCenter)
         self.label_6.setObjectName("label_6")
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.layoutWidget.setGeometry(QtCore.QRect(180, 200, 96, 54))
+        self.layoutWidget.setGeometry(QtCore.QRect(490, 200, 96, 54))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -138,7 +138,7 @@ class Ui_MainWindow(object):
         self.rbtMale.setObjectName("rbtMale")
         self.verticalLayout.addWidget(self.rbtMale)
         self.label_7 = QtWidgets.QLabel(self.centralwidget)
-        self.label_7.setGeometry(QtCore.QRect(190, 180, 81, 17))
+        self.label_7.setGeometry(QtCore.QRect(500, 180, 81, 17))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -146,7 +146,7 @@ class Ui_MainWindow(object):
         self.label_7.setFont(font)
         self.label_7.setObjectName("label_7")
         self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(300, 180, 151, 17))
+        self.label_8.setGeometry(QtCore.QRect(610, 180, 151, 17))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
         self.label_8.setFont(font)
         self.label_8.setObjectName("label_8")
         self.btnNewUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnNewUser.setGeometry(QtCore.QRect(270, 500, 89, 41))
+        self.btnNewUser.setGeometry(QtCore.QRect(270, 560, 89, 41))
         self.btnNewUser.setStyleSheet("QPushButton#btnNewUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #E4E108;\n"
@@ -172,7 +172,7 @@ class Ui_MainWindow(object):
 "")
         self.btnNewUser.setObjectName("btnNewUser")
         self.btnEditUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnEditUser.setGeometry(QtCore.QRect(410, 500, 89, 41))
+        self.btnEditUser.setGeometry(QtCore.QRect(410, 560, 89, 41))
         self.btnEditUser.setStyleSheet("QPushButton#btnEditUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #40CAAF;\n"
@@ -190,7 +190,7 @@ class Ui_MainWindow(object):
 "")
         self.btnEditUser.setObjectName("btnEditUser")
         self.btnDeleteUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnDeleteUser.setGeometry(QtCore.QRect(540, 500, 89, 41))
+        self.btnDeleteUser.setGeometry(QtCore.QRect(540, 560, 89, 41))
         self.btnDeleteUser.setStyleSheet("QPushButton#btnDeleteUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #f4511e;\n"
@@ -208,7 +208,7 @@ class Ui_MainWindow(object):
 "")
         self.btnDeleteUser.setObjectName("btnDeleteUser")
         self.btnSaveUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnSaveUser.setGeometry(QtCore.QRect(670, 500, 89, 41))
+        self.btnSaveUser.setGeometry(QtCore.QRect(670, 560, 89, 41))
         self.btnSaveUser.setStyleSheet("QPushButton#btnSaveUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #15FF03;\n"
@@ -226,7 +226,7 @@ class Ui_MainWindow(object):
 "")
         self.btnSaveUser.setObjectName("btnSaveUser")
         self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
-        self.layoutWidget1.setGeometry(QtCore.QRect(300, 200, 125, 54))
+        self.layoutWidget1.setGeometry(QtCore.QRect(610, 200, 125, 54))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.layoutWidget1)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -255,6 +255,24 @@ class Ui_MainWindow(object):
         self.txtAdmPasword.setEchoMode(QtWidgets.QLineEdit.Password)
         self.txtAdmPasword.setAlignment(QtCore.Qt.AlignCenter)
         self.txtAdmPasword.setObjectName("txtAdmPasword")
+        self.txtUserName = QtWidgets.QLineEdit(self.centralwidget)
+        self.txtUserName.setGeometry(QtCore.QRect(170, 200, 271, 31))
+        self.txtUserName.setStyleSheet("QLineEdit#txtUserName{\n"
+"    border-radius:15px;\n"
+"    background-color:#16B89B;\n"
+"    text-align:center;\n"
+"\n"
+"}")
+        self.txtUserName.setAlignment(QtCore.Qt.AlignCenter)
+        self.txtUserName.setObjectName("txtUserName")
+        self.label_10 = QtWidgets.QLabel(self.centralwidget)
+        self.label_10.setGeometry(QtCore.QRect(180, 180, 171, 17))
+        font = QtGui.QFont()
+        font.setFamily("ori1Uni")
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_10.setFont(font)
+        self.label_10.setObjectName("label_10")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -301,5 +319,7 @@ class Ui_MainWindow(object):
         self.rbtOpe.setText(_translate("MainWindow", "Operador"))
         self.label_9.setText(_translate("MainWindow", "Contraseña:"))
         self.txtAdmPasword.setPlaceholderText(_translate("MainWindow", "Contraseña"))
+        self.txtUserName.setPlaceholderText(_translate("MainWindow", "Nombre Usuario"))
+        self.label_10.setText(_translate("MainWindow", "Nombre de usuario"))
 
 #import resource_rc

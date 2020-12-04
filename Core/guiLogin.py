@@ -12,6 +12,7 @@ from Core.guiDialogNotification import GuiDialogNotification
 from Core.guiDialogQuestion import GuiDialogQuestion 
 
 from Core.draw_tkinter import *
+from Core.DBManager import *
 
 
 class GUILogin(QMainWindow):
@@ -34,7 +35,10 @@ class GUILogin(QMainWindow):
         self.uiQuestion = GuiDialogQuestion()
 
         
+        #instancias de otros TDA'S
 
+        self.DBManager = DBManager()
+        
         
         # Eventos de componentes
         self.uiLogin.btnLogin.clicked.connect(self.login)
@@ -42,7 +46,7 @@ class GUILogin(QMainWindow):
         self.uiMainAdmin.uiMainAdmin.btnManageUsr.clicked.connect(self.openWindowAdminUsr)
         self.uiMainAdmin.uiMainAdmin.btnManageDraw.clicked.connect(self.openWindowDraw)
         self.uiMainAdmin.uiMainAdmin.btnViewBinnacle.clicked.connect(self.openWindowBinnacle)
-        self.uiMainAdmin.uiMainAdmin.btnExit.clicked.connect(self.closeWindowMainAdmin)
+        self.uiMainAdmin.uiMainAdmin.btnExit.clicked.connect(self.openDialogExit)
 
         self.uiMainOp.uiMainOp.btnDraw.clicked.connect(self.openWindowDraw)
         self.uiMainOp.uiMainOp.btnViewBinnacle.clicked.connect(self.openWindowBinnacle)
@@ -53,16 +57,49 @@ class GUILogin(QMainWindow):
 
         self.uiDraw.uiDraw.btnOpeNewDraw.clicked.connect(self.openTkinterDraw)
 
+        self.uiAdmin.uiAdmin.btnSaveUser.clicked.connect(self.registryByAdm)
+
     def login(self):
         if(self.uiLogin.rbtAdministrador.isChecked()):
-            self.openMainWindowAdmin()
-            self.hide()
-            print("Es Administrador")
+            user = self.uiLogin.txtUser.text()
+            password = self.uiLogin.txtPassword.text()
+            if(self.DBManager.login(user, password, 'Administrador')):
+                self.openMainWindowAdmin()
+                self.hide()
+            else:
+                self.uiNotification.uiNotification.lblQuestion.setText("Error al autenticar")
+                self.uiNotification.show()
         else:
             self.openMainWindowOp()
             self.hide()
-            
-            print("Es Operador")
+
+    def registryByAdm(self):
+        name = self.uiAdmin.uiAdmin.txtName.text()
+        lastName = self.uiAdmin.uiAdmin.txtLastName.text()
+        email = self.uiAdmin.uiAdmin.txtEmail.text()
+        password = self.uiAdmin.uiAdmin.txtAdmPasword.text()
+        userName = self.uiAdmin.uiAdmin.txtUserName.text()
+        gender = ""
+        if(self.uiAdmin.uiAdmin.rbtFmale.isChecked()):
+            gender = 'F'
+        elif(self.uiAdmin.uiAdmin.rbtMale.isChecked()):
+            gender = 'F'
+        # Hay que validar Cuando el usuario no ha seleccionado un genero.
+        userType = ""
+        if(self.uiAdmin.uiAdmin.rbtAdmi.isChecked()):
+            userType = "Administrador"
+        elif(self.uiAdmin.uiAdmin.rbtOpe.isChecked()):
+            userType = "Administrador"
+
+        year = self.uiAdmin.uiAdmin.dteDate.date().year()
+        day = self.uiAdmin.uiAdmin.dteDate.date().day()
+        month = self.uiAdmin.uiAdmin.dteDate.date().month()
+        birthDate = "%s-%s-%s"%(year, month, day)
+        print(birthDate)
+        self.DBManager.registry(name, lastName, email, password, userName, gender, userType, birthDate)
+
+
+
 
 
     def openTkinterDraw(self):
@@ -71,6 +108,8 @@ class GUILogin(QMainWindow):
         drawingApp.mainloop()
 
     def openMainWindowOp(self):
+        self.uiDraw.uiDraw.chkMyDraw.setVisible(False)
+        self.uiDraw.uiDraw.lblHeader.setText("Operador")
         self.uiMainOp.show()
 
     def openWindowDraw(self):
@@ -78,6 +117,7 @@ class GUILogin(QMainWindow):
     def openWindowBinnacle(self):
         self.uiBinnacle.show()   
     def closeWindowMainAdmin(self):
+
         self.uiMainAdmin.close()
     def closeWindowMainOp(self):
         self.uiMainOp.close()
@@ -92,15 +132,19 @@ class GUILogin(QMainWindow):
     def openDialogQuestion(self):
         self.uiQuestion.GuiDialogQuestion.close()
 
+    
+
     def runAction(self):
         if self.action == "exit":
             self.closeWindowMainOp()
             self.uiQuestion.close()
+            self.uiMainAdmin.close()
             self.show()
             self.action = ""
-
-
+        
     def openMainWindowAdmin(self):
+        self.uiDraw.uiDraw.chkMyDraw.setVisible(True)
+        self.uiDraw.uiDraw.lblHeader.setText("Administrador")
         self.uiMainAdmin.show()
     
     def openWindowAdminUsr(self):
