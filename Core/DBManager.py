@@ -16,7 +16,16 @@ class DBManager:
             return True
         return False
     
-    def registry(self, name, lastName, email, password, userName, gender, userType, birthDate):
+    def registry(self,objUser):
+        name = objUser.name
+        lastName = objUser.lastName
+        email = objUser.email
+        password = objUser.password
+        userName = objUser.userName
+        gender = objUser.gender
+        userType = objUser.userType
+        birthDate = objUser.birthDate
+        
         try:
             insertFullName = """INSERT INTO FullName (var_user_name, txt_name, txt_last_name) 
                                 VALUES 
@@ -35,10 +44,41 @@ class DBManager:
         query =  "SELECT * FROM User;"
         return self.engine.select(query)
 
-        
+    def updateUser(self, objUser, primariKey):
+        name = objUser.name
+        lastName = objUser.lastName
+        email = objUser.email
+        password = objUser.password
+        userName = objUser.userName
+        gender = objUser.gender
+        userType = objUser.userType
+        birthDate = objUser.birthDate
 
+        try:
+            updateFullName = """UPDATE FullName SET var_user_name = '%s', txt_name = '%s', txt_last_name = '%s' 
+                                WHERE var_user_name = '%s'
+                            """%(userName, name, lastName, primariKey)
+            self.engine.update(updateFullName)  
+            updateUser = """
+                    UPDATE User SET  txt_password = '%s', var_email = '%s', enu_gender = '%s', enu_type = '%s', dat_birthdate = '%s'
+                    WHERE fk_var_user_name = '%s';
+                """%(password,email,gender, userType, birthDate, userName)
+            
+            self.engine.update(updateUser)  
+            print("Si se actualizo")
+        except:
+            print("No se actualizo")
 
-
+    def delete(self,userName):
+        try:
+            # Tambien puede recibir como parametro el nombre de usuario
+            deleteUser = "DELETE FROM User WHERE fk_var_user_name = '%s' "%(userName)
+            self.engine.delete(deleteUser)
+            deleteFullName = "DELETE FROM FullName WHERE var_user_name = '%s'"%(userName)
+            self.engine.delete(deleteFullName)
+            print("Se elimino")
+        except:
+            print("No se pudo eliminar")
 
         
 

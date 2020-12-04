@@ -13,6 +13,7 @@ from Core.guiDialogQuestion import GuiDialogQuestion
 
 from Core.draw_tkinter import *
 from Core.DBManager import *
+from Core.user import User
 
 
 class GUILogin(QMainWindow):
@@ -38,6 +39,8 @@ class GUILogin(QMainWindow):
         #instancias de otros TDA'S
 
         self.DBManager = DBManager()
+
+        self.updateTable()
         
         
         # Eventos de componentes
@@ -96,7 +99,9 @@ class GUILogin(QMainWindow):
         month = self.uiAdmin.uiAdmin.dteDate.date().month()
         birthDate = "%s-%s-%s"%(year, month, day)
         print(birthDate)
-        self.DBManager.registry(name, lastName, email, password, userName, gender, userType, birthDate)
+        user = User(name, lastName, email, password, userName, gender, userType, birthDate)
+        self.DBManager.registry(user)
+        self.updateTable()
 
 
 
@@ -148,6 +153,12 @@ class GUILogin(QMainWindow):
         self.uiMainAdmin.show()
     
     def openWindowAdminUsr(self):
+        self.updateTable()
         self.uiAdmin.show()
+    def updateTable(self):
+        users = self.DBManager.getUsers()
+        print(users)
+        self.uiAdmin.updateTable(users)
+
         
 

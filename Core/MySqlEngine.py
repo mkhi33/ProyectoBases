@@ -29,9 +29,16 @@ class MySqlEngine:
         self.con.commit()
         return True
 
-    def delete(self, id):
-        pass
+    def delete(self, query):
+        self.link.execute(query)
+        self.con.commit()
+        return True
+        
     
-    def update(self, obj):
-        pass
+    def update(self,query):
+        self.link.execute(query)
+        self.con.commit()
+        return True
+        
+        
 
