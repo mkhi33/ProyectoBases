@@ -1,3 +1,5 @@
+from builtins import print
+import json
 from Core.ConnectionConfig import ConnectionConfig
 from Core.MySqlEngine import MySqlEngine
 import configparser
@@ -101,7 +103,6 @@ class DBManager:
 
     def saveDraw(self, name, jsonFile, idUser):
 
-
         insertDraw = """
                 INSERT INTO Drawing(txt_name, jso_file, fk_id_usuario) VALUES
                 ('%s','%s', %s)"""%(name, jsonFile, idUser)
@@ -112,4 +113,10 @@ class DBManager:
         SELECT jso_file FROM Drawing WHERE id = %s
         """%(idDraw)
 
+        return self.engine.select(query)
+
+    def getDrawing(self, fkIdUser):
+        query = """
+            SELECT id, fk_id_Usuario, txt_name, dat_creation_date, tim_modification_date FROM Drawing WHERE fk_id_Usuario = %s;
+        """%fkIdUser
         return self.engine.select(query)

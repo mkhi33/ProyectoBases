@@ -62,7 +62,8 @@ def getDraw():
     file.write(draw[0][0])
     file.close()
     print(draw)
-getDraw()
+
+#getDraw()
 #saveDraw()
 #testUsers()
 

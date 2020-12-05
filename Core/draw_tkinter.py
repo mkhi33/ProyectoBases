@@ -121,9 +121,11 @@ class PyList:
         return len(self.gcList)
 
 class DrawingApplication(tkinter.Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None, flag = None, contentDraw = None):
         super().__init__(master)
         self.idUser = -1
+        self.contentDraw = contentDraw
+        self.flag = flag
         self.pack()
         self.buildWindow()
         self.graphicsCommands = PyList()
@@ -145,43 +147,45 @@ class DrawingApplication(tkinter.Frame):
 
         fileMenu.add_command(label="New", command=newWindow)
 
-        def parseJson(filename):
-            with open(filename) as file:
-                data = json.load(file)
-                for item in data:
-                    if(item["command"] == "GoTo"):
-                        x = float(item["x"])
-                        y = float(item["y"])
-                        width = float(item["width"])
-                        color = item["color"]
-                        cmd = GoToCommand(x,y,width, color)
-                    elif item["command"] == "Circle":
-                        radius = float(item["radius"])
-                        width = float(item["width"])
-                        color = item["color"]
-                        cmd = BeginFillCommand(radius, width,color)
-                    elif item["command"] == "BegiFill":
-                        color = item["color"]
-                        cmd = BeginFillCommand(color)
-                    elif item["command"] == "EndFill":
-                        cmd = EndFillCommand()
-                    elif item["command"] == "PenUp":
-                        cmd = PenUpCommand()
-                    elif item["command"] == "PenDown":
-                        cmd = PenDownCommand()
-                    else:
-                        raise RuntimeError("Comando desconocido "+ item["command"] )
-                    self.graphicsCommands.append(cmd)
-            
+        def loadDraw(file):
+            #self.graphicsCommands = PyList()
+            data = json.loads(file)
+            for i in range(len(data.items())):
+
+                if(data["%s"%i]["command"] == "GoTo"):
+                    x = float(data["%s"%i]["x"])
+                    y = float(data["%s"%i]["y"])
+                    width = float(data["%s"%i]["width"])
+                    color = data["%s"%i]["color"]
+                    cmd = GoToCommand(x,y,width, color)
+                elif data["%s"%i]["command"] == "Circle":
+                    radius = float(data["%s"%i]["radius"])
+                    width = float(data["%s"%i]["width"])
+                    color = data["%s"%i]["color"]
+                    cmd = BeginFillCommand(radius, width,color)
+                elif data["%s"%i]["command"] == "BegiFill":
+                    color = data["%s"%i]["color"]
+                    cmd = BeginFillCommand(color)
+                elif data["%s"%i]["command"] == "EndFill":
+                    cmd = EndFillCommand()
+                elif data["%s"%i]["command"] == "PenUp":
+                    cmd = PenUpCommand()
+                elif data["%s"%i]["command"] == "PenDown":
+                    cmd = PenDownCommand()
+                else:
+                    raise RuntimeError("Comando desconocido "+data["%s"%i]["command"] )
+                self.graphicsCommands.append(cmd)
+
+
 
         def parse(filename):
             xmldoc = xml.dom.minidom.parse(filename)
             graphicsCommandsElement = xmldoc.getElementsByTagName("GraphicsCommands")[0]
             graphicsCommands = graphicsCommandsElement.getElementsByTagName("Command")
             for commandElement in graphicsCommands:
-                
+
                 command = commandElement.firstChild.data.strip()
-             
+
                 attr = commandElement.attributes
                 if command == "GoTo":
                     x = float(attr["x"].value)
@@ -206,13 +210,13 @@ class DrawingApplication(tkinter.Frame):
                 else:
                     raise RuntimeError("Comando desconocido " + command)
 
-                self.graphicsCommands.append(cmd)
+                graphicsCommands.append(cmd)
 
-        def loadFile():
-            filename = tkinter.filedialog.askopenfilename(title="Selecciona una")
+        def loadFile(filename = self.contentDraw):
+            #filename = tkinter.filedialog.askopenfilename(title="Selecciona una")
             newWindow()
             self.graphicsCommands = PyList()
-            parseJson(filename)
+            loadDraw(filename)
             for cmd in self.graphicsCommands:
                 cmd.draw(theTurtle)
             screen.update()
@@ -234,7 +238,7 @@ class DrawingApplication(tkinter.Frame):
             cmd = PenDownCommand()
             self.graphicsCommands.append(cmd)
             screen.update()
-            parseJson(filename)
+            #parseJson(filename)
             #parse(filename)
 
             for cmd in self.graphicsCommands:
@@ -246,30 +250,13 @@ class DrawingApplication(tkinter.Frame):
 
         def writeJson(filename):
             j = {}
-
-
-            file = open(filename,"w", encoding='utf-8')
-            h = []
-            d = {}
             count = 0
-            """
-            for cmd in self.graphicsCommands:
-          
-                h.append(cmd.getDict())
-                d[count] = cmd.getDict()
-                count+= 1
-            """
             for cmd in self.graphicsCommands:
                 j[count]= cmd.getDict()
                 count+=1
 
-            json.dump(j, file, indent = 4)
-            file.close()
-            type(j)
-            self.database.saveDraw(filename,j,self.idUser)
-            print("Se guardo el dibujo en la base de datos")
+            self.database.saveDraw(filename,json.dumps(j),self.idUser)
 
-            
         def write(filename):
             file = open(filename, "w")
             file.write('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n')
@@ -290,7 +277,7 @@ class DrawingApplication(tkinter.Frame):
             #write(filename)
 
         fileMenu.add_command(label="Guardar como...", command=saveFile)
-        
+
         fileMenu.add_command(label="Salir", command=self.master.quit)
 
         bar.add_cascade(label="File", menu=fileMenu)
@@ -363,7 +350,7 @@ class DrawingApplication(tkinter.Frame):
             color = tkinter.colorchooser.askcolor()
             if color != None:
                 fillColor.set(str(color)[-9:-2])
-            
+
         fillColorButton = \
             tkinter.Button(sideBar, text="Escoja color de relleno", command=getFillColor)
         fillColorButton.pack(fill=tkinter.BOTH)
@@ -380,7 +367,7 @@ class DrawingApplication(tkinter.Frame):
             cmd = EndFillCommand()
             cmd.draw(theTurtle)
             self.graphicsCommands.append(cmd)
-        
+
         endFillButton = tkinter.Button(sideBar, text="Terminar relleno", command=endFillHandler)
         endFillButton.pack(fill=tkinter.BOTH)
 
@@ -434,7 +421,8 @@ class DrawingApplication(tkinter.Frame):
                     cmd.draw(theTurtle)
                 screen.update()
                 screen.listen()
-
+        if(self.flag == "edit"):
+            loadFile(self.contentDraw)
         screen.onkeypress(undoHandler, "u")
         screen.listen()
 

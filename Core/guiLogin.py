@@ -43,6 +43,7 @@ class GUILogin(QMainWindow):
         self.uiQuestion = GuiDialogQuestion()
 
 
+
         #instancias de otros TDA'S
 
         self.DBManager = DBManager()
@@ -67,6 +68,7 @@ class GUILogin(QMainWindow):
         self.uiNotification.uiNotification.btnYes.clicked.connect(self.closeDialogNotification)
 
         self.uiDraw.uiDraw.btnOpeNewDraw.clicked.connect(self.openTkinterDraw)
+        self.uiDraw.uiDraw.btnOptEditDraw.clicked.connect(self.editDraw)
 
         self.uiAdmin.uiAdmin.btnSaveUser.clicked.connect(self.openDialogSaveEdit)
         self.uiAdmin.uiAdmin.btnEditUser.clicked.connect((self.editUser))
@@ -236,7 +238,18 @@ class GUILogin(QMainWindow):
 
 
 
+    def editDraw(self):
+        row = self.uiDraw.getRowValues()
+        id = row[0]
+        draw = self.DBManager.getDraw(id)[0][0]
+
+
+        root = tkinter.Tk()
+        drawingApp = DrawingApplication(root, "edit", draw)
+        drawingApp.mainloop()
+
     def openTkinterDraw(self):
+
         root = tkinter.Tk()
         drawingApp = DrawingApplication(root)
         drawingApp.idUser = self.idCurrentUser
@@ -250,7 +263,10 @@ class GUILogin(QMainWindow):
         self.uiMainOp.show()
 
     def openWindowDraw(self):
+        draws = self.DBManager.getDrawing(self.idCurrentUser)
+        self.uiDraw.updateTable(draws)
         self.uiDraw.show()
+
     def openWindowBinnacle(self):
         self.uiBinnacle.show()
     def closeWindowMainAdmin(self):
