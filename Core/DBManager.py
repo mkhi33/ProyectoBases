@@ -1,8 +1,19 @@
 from Core.ConnectionConfig import ConnectionConfig
 from Core.MySqlEngine import MySqlEngine
+import configparser
 class DBManager:
     def __init__(self):
-        self.config = ConnectionConfig("localhost","3306", "admin", "admin", "DataBaseA")
+        self.configuration = configparser.ConfigParser()
+        self.configuration['config'] = {'port': '3306', 'user': 'admin', 'password': 'admin', 'database': 'DataBaseA',
+                            'host': 'localhost'}
+        self.host = self.configuration['config']['host']
+        self.user = self.configuration['config']['user']
+        self.port = self.configuration['config']['port']
+        self.password = self.configuration['config']['password']
+        self.database = self.configuration['config']['database']
+
+
+        self.config = ConnectionConfig(self.host,self.port, self.user,self.password, self.database)
         self.engine = MySqlEngine(self.config)
 
     def login(self, name, password, userType):
@@ -15,7 +26,9 @@ class DBManager:
         if(len(self.engine.select(query))>0):
             return True
         return False
-    
+
+
+
     def registry(self,objUser):
         name = objUser.name
         lastName = objUser.lastName
@@ -41,8 +54,13 @@ class DBManager:
             print("No se agrego")
     
     def getUsers(self):
-        query =  "SELECT * FROM User;"
+        query = """
+        SELECT id, fk_var_user_name,txt_name, txt_last_name, var_email,dat_birthdate, enu_gender, enu_type,txt_password  
+            FROM (User JOIN FullName ON fk_var_user_name = FullName.var_user_name);
+        """
         return self.engine.select(query)
+
+
 
     def updateUser(self, objUser, primariKey):
         name = objUser.name
@@ -75,12 +93,23 @@ class DBManager:
             deleteUser = "DELETE FROM User WHERE fk_var_user_name = '%s' "%(userName)
             self.engine.delete(deleteUser)
             deleteFullName = "DELETE FROM FullName WHERE var_user_name = '%s'"%(userName)
+            print(userName)
             self.engine.delete(deleteFullName)
             print("Se elimino")
         except:
             print("No se pudo eliminar")
 
-        
+    def saveDraw(self, name, jsonFile, idUser):
 
 
-        
+        insertDraw = """
+                INSERT INTO Drawing(txt_name, jso_file, fk_id_usuario) VALUES
+                ('%s','%s', %s)"""%(name, jsonFile, idUser)
+        self.engine.insert(insertDraw)
+
+    def getDraw(self, idDraw):
+        query = """
+        SELECT jso_file FROM Drawing WHERE id = %s
+        """%(idDraw)
+
+        return self.engine.select(query)

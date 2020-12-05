@@ -1,7 +1,10 @@
 import mysql.connector
+from Core.ConnectionConfig import *
+
 
 class MySqlEngine:
     def __init__(self, config):
+
         self.server = config.server
         self.port = config.port
         self.user = config.user

@@ -60,7 +60,7 @@ class Ui_MainWindow(object):
         self.label.setText("")
         self.label.setObjectName("label")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(170, 60, 81, 17))
+        self.label_2.setGeometry(QtCore.QRect(180, 60, 81, 17))
         font = QtGui.QFont()
         font.setFamily("ori1Uni")
         font.setBold(True)
@@ -85,6 +85,7 @@ class Ui_MainWindow(object):
         self.label_3.setObjectName("label_3")
         self.dteDate = QtWidgets.QDateEdit(self.centralwidget)
         self.dteDate.setGeometry(QtCore.QRect(180, 270, 110, 26))
+        self.dteDate.setStyleSheet("    background-color:#16B89B;")
         self.dteDate.setObjectName("dteDate")
         self.label_5 = QtWidgets.QLabel(self.centralwidget)
         self.label_5.setGeometry(QtCore.QRect(180, 250, 191, 17))
@@ -104,7 +105,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setShowGrid(True)
         self.tableWidget.setGridStyle(QtCore.Qt.SolidLine)
         self.tableWidget.setRowCount(10)
-        self.tableWidget.setColumnCount(7)
+        self.tableWidget.setColumnCount(9)
         self.tableWidget.setObjectName("tableWidget")
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -120,6 +121,10 @@ class Ui_MainWindow(object):
         self.tableWidget.setHorizontalHeaderItem(5, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(6, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(7, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(8, item)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(140)
         self.label_6 = QtWidgets.QLabel(self.centralwidget)
         self.label_6.setGeometry(QtCore.QRect(10, 330, 911, 31))
@@ -161,7 +166,7 @@ class Ui_MainWindow(object):
         self.label_8.setFont(font)
         self.label_8.setObjectName("label_8")
         self.btnNewUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnNewUser.setGeometry(QtCore.QRect(270, 560, 89, 41))
+        self.btnNewUser.setGeometry(QtCore.QRect(210, 540, 89, 41))
         self.btnNewUser.setStyleSheet("QPushButton#btnNewUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #E4E108;\n"
@@ -179,7 +184,7 @@ class Ui_MainWindow(object):
 "")
         self.btnNewUser.setObjectName("btnNewUser")
         self.btnEditUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnEditUser.setGeometry(QtCore.QRect(410, 560, 89, 41))
+        self.btnEditUser.setGeometry(QtCore.QRect(350, 540, 89, 41))
         self.btnEditUser.setStyleSheet("QPushButton#btnEditUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #40CAAF;\n"
@@ -197,7 +202,7 @@ class Ui_MainWindow(object):
 "")
         self.btnEditUser.setObjectName("btnEditUser")
         self.btnDeleteUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnDeleteUser.setGeometry(QtCore.QRect(540, 560, 89, 41))
+        self.btnDeleteUser.setGeometry(QtCore.QRect(480, 540, 89, 41))
         self.btnDeleteUser.setStyleSheet("QPushButton#btnDeleteUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #f4511e;\n"
@@ -215,7 +220,7 @@ class Ui_MainWindow(object):
 "")
         self.btnDeleteUser.setObjectName("btnDeleteUser")
         self.btnSaveUser = QtWidgets.QPushButton(self.centralwidget)
-        self.btnSaveUser.setGeometry(QtCore.QRect(670, 560, 89, 41))
+        self.btnSaveUser.setGeometry(QtCore.QRect(610, 540, 89, 41))
         self.btnSaveUser.setStyleSheet("QPushButton#btnSaveUser{\n"
 "          border-radius: 15px;\n"
 "          background-color: #15FF03;\n"
@@ -253,7 +258,7 @@ class Ui_MainWindow(object):
         self.label_9.setFont(font)
         self.label_9.setObjectName("label_9")
         self.txtAdmPasword = QtWidgets.QLineEdit(self.centralwidget)
-        self.txtAdmPasword.setGeometry(QtCore.QRect(490, 140, 271, 31))
+        self.txtAdmPasword.setGeometry(QtCore.QRect(500, 140, 271, 31))
         self.txtAdmPasword.setStyleSheet("QLineEdit#txtAdmPasword{\n"
 "    border-radius:15px;\n"
 "    background-color:#16B89B;\n"
@@ -280,6 +285,25 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_10.setFont(font)
         self.label_10.setObjectName("label_10")
+        self.btnCancel = QtWidgets.QPushButton(self.centralwidget)
+        self.btnCancel.setEnabled(True)
+        self.btnCancel.setGeometry(QtCore.QRect(730, 540, 89, 41))
+        self.btnCancel.setStyleSheet("QPushButton#btnCancel{\n"
+"          border-radius: 15px;\n"
+"          background-color: #f4511e;;\n"
+"         border: none;\n"
+"         color: #FFFFFF;\n"
+"         text-align: center;\n"
+"          font-size: 14px;\n"
+"          margin: 5px;\n"
+"}\n"
+"\n"
+"QPushButton#btnCancel:hover {\n"
+"    background-color: rgb(22, 184, 39);\n"
+"    cursor:pointer;\n"
+"}\n"
+"")
+        self.btnCancel.setObjectName("btnCancel")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -298,21 +322,26 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Nombre:"))
         self.label_4.setText(_translate("MainWindow", "Apellido:"))
         self.label_3.setText(_translate("MainWindow", "Correo Electrónico:"))
+        self.dteDate.setDisplayFormat(_translate("MainWindow", "dd/MM/yyyy"))
         self.label_5.setText(_translate("MainWindow", "Fecha de nacimiento: "))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Id"))
         item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "Nombre"))
+        item.setText(_translate("MainWindow", "Usuario"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "Apellido"))
+        item.setText(_translate("MainWindow", "Nombre"))
         item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "e-mail"))
+        item.setText(_translate("MainWindow", "Apellido"))
         item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Fecha de nacimiento"))
+        item.setText(_translate("MainWindow", "e-mail"))
         item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "Genero"))
+        item.setText(_translate("MainWindow", "Fecha de nacimiento"))
         item = self.tableWidget.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Genero"))
+        item = self.tableWidget.horizontalHeaderItem(7)
         item.setText(_translate("MainWindow", "Tipo de usuario"))
+        item = self.tableWidget.horizontalHeaderItem(8)
+        item.setText(_translate("MainWindow", "Contraseña"))
         self.label_6.setText(_translate("MainWindow", "Usuarios registrados"))
         self.rbtFmale.setText(_translate("MainWindow", "Femenino"))
         self.rbtMale.setText(_translate("MainWindow", "Masculino"))
@@ -328,5 +357,6 @@ class Ui_MainWindow(object):
         self.txtAdmPasword.setPlaceholderText(_translate("MainWindow", "Contraseña"))
         self.txtUserName.setPlaceholderText(_translate("MainWindow", "Nombre Usuario"))
         self.label_10.setText(_translate("MainWindow", "Nombre de usuario"))
+        self.btnCancel.setText(_translate("MainWindow", "Cancelar"))
 
 #import resource_rc

@@ -7,6 +7,11 @@ import tkinter.filedialog
 import xml.dom.minidom
 import json
 
+from Core.DBManager import DBManager
+from Core.MySqlEngine import MySqlEngine
+from Core.ConnectionConfig import ConnectionConfig
+
+
 class GoToCommand:
     def __init__(self, x, y, width=1, color="black"):
         self.x = x
@@ -118,9 +123,11 @@ class PyList:
 class DrawingApplication(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        self.idUser = -1
         self.pack()
         self.buildWindow()
         self.graphicsCommands = PyList()
+        self.database = DBManager()
 
     def buildWindow(self):
         self.master.title("Draw")
@@ -238,18 +245,30 @@ class DrawingApplication(tkinter.Frame):
         fileMenu.add_command(label="Cargar en...", command=addToFile)
 
         def writeJson(filename):
-         
+            j = {}
+
+
             file = open(filename,"w", encoding='utf-8')
             h = []
             d = {}
             count = 0
+            """
             for cmd in self.graphicsCommands:
           
                 h.append(cmd.getDict())
                 d[count] = cmd.getDict()
                 count+= 1
-            json.dump(h, file, indent=4)
+            """
+            for cmd in self.graphicsCommands:
+                j[count]= cmd.getDict()
+                count+=1
+
+            json.dump(j, file, indent = 4)
             file.close()
+            type(j)
+            self.database.saveDraw(filename,j,self.idUser)
+            print("Se guardo el dibujo en la base de datos")
+
             
         def write(filename):
             file = open(filename, "w")

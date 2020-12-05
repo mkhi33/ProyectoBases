@@ -47,8 +47,24 @@ def testUsers():
     print(type(user))
     print(user)
     t = user[0]
+def saveDraw():
+    file = open('Dibujo.json','r')
+    content = file.read()
+    file.close()
+    #content = content.replace("[", "{").replace("]", "}")
 
-testUsers()
+    DBM.saveDraw("Dibujo1","2020-12-04",content,9)
+    print(content)
+
+def getDraw():
+    draw = DBM.getDraw(1)
+    file = open("Query.json", "w")
+    file.write(draw[0][0])
+    file.close()
+    print(draw)
+getDraw()
+#saveDraw()
+#testUsers()
 
 #testUpdateUser()
 #testDelete()
