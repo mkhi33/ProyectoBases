@@ -69,7 +69,7 @@ class GUILogin(QMainWindow):
 
         self.uiDraw.uiDraw.btnOpeNewDraw.clicked.connect(self.openTkinterDraw)
         self.uiDraw.uiDraw.btnOptEditDraw.clicked.connect(self.editDraw)
-        self.uiDraw.uiDraw.btnOpDeleteDraw.clicked.connect(self.deletDraw)
+        self.uiDraw.uiDraw.btnOpDeleteDraw.clicked.connect(self.openDialogDeleteDraw)
 
 
         self.uiAdmin.uiAdmin.btnSaveUser.clicked.connect(self.openDialogSaveEdit)
@@ -244,6 +244,10 @@ class GUILogin(QMainWindow):
         self.DBManager.deleteDraw(id)
         self.updateTableDraws()
 
+    def openDialogDeleteDraw(self):
+        self.action = "deleteDraw"
+        self.uiQuestion.GuiDialogQuestion.lblQuestion.setText("¿ Esta seguro que quiere eliminar este dibujo?")
+        self.uiQuestion.show()
 
 
     def editDraw(self):
@@ -256,7 +260,6 @@ class GUILogin(QMainWindow):
 
         drawingApp = DrawingApplication(root, "edit", draw)
         drawingApp.idUser = self.idCurrentUser
-        #drawingApp.contentDraw = draw
         drawingApp.idDraw = id
         drawingApp.mainloop()
 
@@ -321,6 +324,10 @@ class GUILogin(QMainWindow):
             self.action = ""
         elif self.action == "delete":
             self.deleteUser()
+            self.uiQuestion.close()
+            self.action = ""
+        elif self.action == "deleteDraw":
+            self.deletDraw()
             self.uiQuestion.close()
             self.action = ""
 
