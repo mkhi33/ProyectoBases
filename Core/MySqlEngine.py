@@ -22,6 +22,10 @@ class MySqlEngine:
         )
         self.link = self.con.cursor()
 
+    def close(self):
+        self.con.close()
+        return  True
+
     def select(self ,query = ""):
         self.link.execute(query)
 

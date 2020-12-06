@@ -69,12 +69,15 @@ class GUILogin(QMainWindow):
 
         self.uiDraw.uiDraw.btnOpeNewDraw.clicked.connect(self.openTkinterDraw)
         self.uiDraw.uiDraw.btnOptEditDraw.clicked.connect(self.editDraw)
+        self.uiDraw.uiDraw.btnOpDeleteDraw.clicked.connect(self.deletDraw)
+
 
         self.uiAdmin.uiAdmin.btnSaveUser.clicked.connect(self.openDialogSaveEdit)
         self.uiAdmin.uiAdmin.btnEditUser.clicked.connect((self.editUser))
         self.uiAdmin.uiAdmin.btnCancel.clicked.connect(self.cancelAction)
         self.uiAdmin.uiAdmin.btnNewUser.clicked.connect(self.createNewUser)
         self.uiAdmin.uiAdmin.btnDeleteUser.clicked.connect(self.openDialogDelete)
+
 
     def login(self):
         user = self.uiLogin.txtUser.text()
@@ -83,7 +86,7 @@ class GUILogin(QMainWindow):
         if(self.uiLogin.rbtAdministrador.isChecked()):
             if(self.DBManager.login(user, password, 'Administrador')):
                 self.idCurrentUser = self.DBManager.engine.select(queryUser)[0][0]
-                print(queryUser)
+
                 self.openMainWindowAdmin()
                 self.hide()
             else:
@@ -125,9 +128,9 @@ class GUILogin(QMainWindow):
         day = self.uiAdmin.uiAdmin.dteDate.date().day()
         month = self.uiAdmin.uiAdmin.dteDate.date().month()
         birthDate = "%s-%s-%s"%(year, month, day)
-        print(birthDate)
+
         user = User(name, lastName, email, password, userName, gender, userType, birthDate)
-        print(self.operation)
+
         if self.operation == "save":
 
             self.DBManager.registry(user)
@@ -235,23 +238,32 @@ class GUILogin(QMainWindow):
         self.uiAdmin.uiAdmin.rbtFmale.setChecked(False)
 
 
+    def deletDraw(self):
+        row = self.uiDraw.getRowValues()
+        id = row[0]
+        self.DBManager.deleteDraw(id)
+        self.updateTableDraws()
 
 
 
     def editDraw(self):
+        self.uiDraw.close()
         row = self.uiDraw.getRowValues()
         id = row[0]
         draw = self.DBManager.getDraw(id)[0][0]
 
-
         root = tkinter.Tk()
+
         drawingApp = DrawingApplication(root, "edit", draw)
+        drawingApp.idUser = self.idCurrentUser
+        #drawingApp.contentDraw = draw
+        drawingApp.idDraw = id
         drawingApp.mainloop()
 
     def openTkinterDraw(self):
-
+        self.uiDraw.close()
         root = tkinter.Tk()
-        drawingApp = DrawingApplication(root)
+        drawingApp = DrawingApplication(root, "save")
         drawingApp.idUser = self.idCurrentUser
         drawingApp.mainloop()
     def saveDraw(self):
@@ -323,6 +335,9 @@ class GUILogin(QMainWindow):
     def updateTable(self):
         users = self.DBManager.getUsers()
         self.uiAdmin.updateTable(users)
+    def updateTableDraws(self):
+        draws = self.DBManager.getDrawing(self.idCurrentUser)
+        self.uiDraw.updateTable(draws)
     def closeDialogNotification(self):
         self.uiNotification.close()
         self.uiNotification.uiNotification.btnYes.setVisible(True)

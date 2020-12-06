@@ -6,6 +6,8 @@ import tkinter.colorchooser
 import tkinter.filedialog
 import xml.dom.minidom
 import json
+from Core.guiDialogSave import GuiDialogSave
+from tkinter import simpledialog
 
 from Core.DBManager import DBManager
 from Core.MySqlEngine import MySqlEngine
@@ -48,6 +50,7 @@ class CircleCommand:
         turtle.width(self.width)
         turtle.pencolor(self.color)
         turtle.circle(self.radius)
+
 
     def __str__(self):
         d = '"radius":%s, "width":%s,"color":%s, "command:%s'%(self.radius, self.width, self.color,"Circle")
@@ -121,15 +124,20 @@ class PyList:
         return len(self.gcList)
 
 class DrawingApplication(tkinter.Frame):
-    def __init__(self, master=None, flag = None, contentDraw = None):
+    def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = True):
         super().__init__(master)
         self.idUser = -1
+        self.idDraw = -1
         self.contentDraw = contentDraw
         self.flag = flag
         self.pack()
         self.buildWindow()
         self.graphicsCommands = PyList()
         self.database = DBManager()
+        self.isAdmin = isAdmin
+        self.count = 0
+
+
 
     def buildWindow(self):
         self.master.title("Draw")
@@ -146,6 +154,7 @@ class DrawingApplication(tkinter.Frame):
             self.graphicsCommands = PyList()
 
         fileMenu.add_command(label="New", command=newWindow)
+
 
         def loadDraw(file):
             #self.graphicsCommands = PyList()
@@ -212,10 +221,10 @@ class DrawingApplication(tkinter.Frame):
 
                 graphicsCommands.append(cmd)
 
-        def loadFile(filename = self.contentDraw):
-            #filename = tkinter.filedialog.askopenfilename(title="Selecciona una")
+        def loadFile(filename = ""):
             newWindow()
-            self.graphicsCommands = PyList()
+            if(self.flag != 'edit'):
+                self.graphicsCommands = PyList()
             loadDraw(filename)
             for cmd in self.graphicsCommands:
                 cmd.draw(theTurtle)
@@ -245,36 +254,42 @@ class DrawingApplication(tkinter.Frame):
                 cmd.draw(theTurtle)
 
             screen.update()
+        def downloadJson():
+            filename = tkinter.filedialog.asksaveasfilename(title="Guardar JSON como...")
+            if(filename != ""):
+                write(filename)
 
-        fileMenu.add_command(label="Cargar en...", command=addToFile)
+        fileMenu.add_command(label="Descargar JSON", command=downloadJson)
+
 
         def writeJson(filename):
             j = {}
             count = 0
-            for cmd in self.graphicsCommands:
-                j[count]= cmd.getDict()
-                count+=1
 
-            self.database.saveDraw(filename,json.dumps(j),self.idUser)
 
-        def write(filename):
-            file = open(filename, "w")
-            file.write('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n')
-            file.write('<GraphicsCommands>\n')
-            for cmd in self.graphicsCommands:
-                file.write('    ' + str(cmd) + "\n")
+            if self.flag == 'save':
+                for cmd in self.graphicsCommands:
+                    j[count] = cmd.getDict()
+                    count += 1
 
-            file.write('</GraphicsCommands>\n')
+                self.database.saveDraw(filename,json.dumps(j),self.idUser)
+            elif self.flag == 'edit':
+                self.contentDraw = json.loads(self.contentDraw)
+                self.count = len(self.contentDraw) - 1
+                for cmd in self.graphicsCommands:
+                    self.contentDraw[self.count] = cmd.getDict()
+                    self.count += 1
 
-            file.close()
+                self.database.editDraw(filename, json.dumps(self.contentDraw), self.idUser, self.idDraw)
+
+
 
         def saveFile():
-            filename = tkinter.filedialog.asksaveasfilename(title="Guardar imagen como...")
-            if(filename[-5:] != ".json"):
-                filename = filename + ".json"
+            fileName = simpledialog.askstring("Input", "Guardar como...")
 
-            writeJson(filename)
-            #write(filename)
+            if(fileName):
+                writeJson(fileName)
+
 
         fileMenu.add_command(label="Guardar como...", command=saveFile)
 
@@ -311,6 +326,7 @@ class DrawingApplication(tkinter.Frame):
         radiusEntry = tkinter.Entry(sideBar, textvariable=radiusSize)
         radiusSize.set(str(10))
         radiusEntry.pack()
+
 
         def circleHandler():
             cmd = CircleCommand(float(radiusSize.get()), float(widthSize.get()), penColor.get())
@@ -421,8 +437,12 @@ class DrawingApplication(tkinter.Frame):
                     cmd.draw(theTurtle)
                 screen.update()
                 screen.listen()
+        def configure():
+            pass
+
         if(self.flag == "edit"):
             loadFile(self.contentDraw)
+
         screen.onkeypress(undoHandler, "u")
         screen.listen()
 
