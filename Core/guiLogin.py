@@ -2,6 +2,8 @@
 import sys
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
+
+from Core.DrawingApplication import DrawingApplication
 from Core.pyQt5.windowLogin import Ui_MainWindow
 from Core.guiAdmin import GUIAdmin
 from Core.guiMainWindowAdmin import GUIMainAdmin
@@ -10,6 +12,7 @@ from Core.guiBinnacle import GuiBinnacle
 from Core.guiDraw import GuiDraw
 from Core.guiDialogNotification import GuiDialogNotification
 from Core.guiDialogQuestion import GuiDialogQuestion
+from Core.guiShowImage import GuiShowImage
 from PyQt5.QtCore import QDate, Qt
 from datetime import  datetime
 
@@ -41,6 +44,7 @@ class GUILogin(QMainWindow):
         self.uiDraw = GuiDraw()
         self.uiNotification = GuiDialogNotification()
         self.uiQuestion = GuiDialogQuestion()
+        self.uiShowImage = GuiShowImage()
 
 
 
@@ -70,6 +74,8 @@ class GUILogin(QMainWindow):
         self.uiDraw.uiDraw.btnOpeNewDraw.clicked.connect(self.openTkinterDraw)
         self.uiDraw.uiDraw.btnOptEditDraw.clicked.connect(self.editDraw)
         self.uiDraw.uiDraw.btnOpDeleteDraw.clicked.connect(self.openDialogDeleteDraw)
+        self.uiDraw.uiDraw.chkMyDraw.clicked.connect(self.eventChek)
+        self.uiDraw.uiDraw.btnOpViewDraw.clicked.connect(self.showWindowImage)
 
 
         self.uiAdmin.uiAdmin.btnSaveUser.clicked.connect(self.openDialogSaveEdit)
@@ -86,17 +92,19 @@ class GUILogin(QMainWindow):
         if(self.uiLogin.rbtAdministrador.isChecked()):
             if(self.DBManager.login(user, password, 'Administrador')):
                 self.idCurrentUser = self.DBManager.engine.select(queryUser)[0][0]
-
+                self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
                 self.openMainWindowAdmin()
                 self.hide()
             else:
                 self.uiNotification.uiNotification.btnNo.setVisible(False)
                 self.uiNotification.uiNotification.lblQuestion.setText("Error al autenticar")
+
                 self.uiNotification.show()
         elif self.uiLogin.rbtOperador.isChecked():
             if (self.DBManager.login(user, password, 'Operador')):
                 self.idCurrentUser = self.DBManager.engine.select(queryUser)[0][0]
                 self.openMainWindowOp()
+                self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
                 self.hide()
             else:
                 self.uiNotification.uiNotification.btnNo.setVisible(False)
@@ -117,7 +125,6 @@ class GUILogin(QMainWindow):
             gender = 'F'
         elif(self.uiAdmin.uiAdmin.rbtMale.isChecked()):
             gender = 'M'
-        # Hay que validar Cuando el usuario no ha seleccionado un genero.
         userType = ""
         if(self.uiAdmin.uiAdmin.rbtAdmi.isChecked()):
             userType = "Administrador"
@@ -249,19 +256,46 @@ class GUILogin(QMainWindow):
         self.uiQuestion.GuiDialogQuestion.lblQuestion.setText("¿ Esta seguro que quiere eliminar este dibujo?")
         self.uiQuestion.show()
 
+    def showWindowImage(self):
+        row = self.uiDraw.getRowValues()
+
+        if not None in row:
+            id = row[0]
+            self.uiDraw.close()
+            draw = self.DBManager.getDraw(id)[0][0]
+
+            root = tkinter.Tk()
+            drawingApp = DrawingApplication(root, "view", draw)
+
+            drawingApp.master.quit()
+            drawingApp.mainloop()
 
     def editDraw(self):
-        self.uiDraw.close()
         row = self.uiDraw.getRowValues()
-        id = row[0]
-        draw = self.DBManager.getDraw(id)[0][0]
+        if not None in row:
+            self.uiDraw.close()
+            id = row[0]
+            draw = self.DBManager.getDraw(id)[0][0]
 
-        root = tkinter.Tk()
+            root = tkinter.Tk()
 
-        drawingApp = DrawingApplication(root, "edit", draw)
-        drawingApp.idUser = self.idCurrentUser
-        drawingApp.idDraw = id
-        drawingApp.mainloop()
+            drawingApp = DrawingApplication(root, "edit", draw)
+            if(self.uiDraw.uiDraw.chkMyDraw.isChecked()):
+                drawingApp.idUser = self.idCurrentUser
+            else:
+                drawingApp.idUser = row[1]
+            drawingApp.idDraw = id
+
+            drawingApp.mainloop()
+        else:
+            text = "¡Error!\nNo se a seleccionado ningun elemento"
+            self.openDialogNotification(text)
+    def eventChek(self):
+        if(self.uiDraw.uiDraw.chkMyDraw.isChecked()):
+            self.updateTableDraws()
+        else:
+            self.updateTableAllDraws()
+
 
     def openTkinterDraw(self):
         self.uiDraw.close()
@@ -279,8 +313,10 @@ class GUILogin(QMainWindow):
 
     def openWindowDraw(self):
         draws = self.DBManager.getDrawing(self.idCurrentUser)
+        self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
         self.uiDraw.updateTable(draws)
         self.uiDraw.show()
+
 
     def openWindowBinnacle(self):
         self.uiBinnacle.show()
@@ -303,8 +339,10 @@ class GUILogin(QMainWindow):
         self.action = "saving"
         self.uiQuestion.show()
 
-    def openDialogQuestion(self):
-        self.uiQuestion.GuiDialogQuestion.close()
+    def openDialogNotification(self, text= ""):
+        self.uiNotification.uiNotification.lblQuestion.setText(text)
+        self.uiNotification.uiNotification.btnNo.setVisible(False)
+        self.uiNotification.show()
 
     def openDialogDelete(self):
         self.uiQuestion.GuiDialogQuestion.lblQuestion.setText("¿Desea eliminar este usuario?\nSe eliminara el usuario de la base de datos.")
@@ -328,6 +366,7 @@ class GUILogin(QMainWindow):
             self.action = ""
         elif self.action == "deleteDraw":
             self.deletDraw()
+            self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
             self.uiQuestion.close()
             self.action = ""
 
@@ -344,6 +383,9 @@ class GUILogin(QMainWindow):
         self.uiAdmin.updateTable(users)
     def updateTableDraws(self):
         draws = self.DBManager.getDrawing(self.idCurrentUser)
+        self.uiDraw.updateTable(draws)
+    def updateTableAllDraws(self):
+        draws = self.DBManager.getAllDraws()
         self.uiDraw.updateTable(draws)
     def closeDialogNotification(self):
         self.uiNotification.close()

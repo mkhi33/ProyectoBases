@@ -12,4 +12,3 @@ class GuiMainOp(QMainWindow):
         self.uiMainOp = Ui_MainWindow()
         self.uiMainOp.setupUi(self)
 
-    

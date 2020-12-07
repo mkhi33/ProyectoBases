@@ -47,16 +47,17 @@ class DBManager:
             insertFullName = """INSERT INTO FullName (var_user_name, txt_name, txt_last_name) 
                                 VALUES 
                                 ('%s', '%s', '%s') """%(userName, name, lastName)
-            self.engine.insert(insertFullName)  
+            self.engine.insert(insertFullName)
             insertUser = """
                     INSERT INTO User(fk_var_user_name, txt_password, var_email, enu_gender, enu_type, dat_birthdate) VALUES
                     ('%s','%s', '%s', '%s', '%s', '%s');
                 """%(userName,password,email,gender, userType, birthDate)
             self.engine.insert(insertUser)
             print("Si se agrego")
-        except:
+        except AssertionError as error:
+            print(error)
             print("No se agrego")
-        self.engine.close()
+            self.engine.close()
     
     def getUsers(self):
         self.engine.start()
@@ -136,8 +137,16 @@ class DBManager:
         """%(idDraw)
         query = self.engine.select(query)
         self.engine.close()
-
         return query
+
+    def getAllDraws(self):
+        self.engine.start()
+        query = """
+                SELECT id, fk_id_Usuario, txt_name, dat_creation_date, tim_modification_date FROM Drawing;
+            """
+        draws = self.engine.select(query)
+        self.engine.close()
+        return draws
 
     def getDrawing(self, fkIdUser):
         self.engine.start()
