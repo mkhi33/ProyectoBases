@@ -112,6 +112,7 @@ class GUILogin(QMainWindow):
                 self.getConfigColors()
                 self.openMainWindowAdmin()
                 self.isAdmin = True
+                self.DBManager.setLoginRegister(self.idCurrentUser,self.uiDraw.fillColor, self.uiDraw.penColor)
                 self.hide()
             else:
                 self.uiNotification.uiNotification.btnNo.setVisible(False)
@@ -125,6 +126,7 @@ class GUILogin(QMainWindow):
                 self.getConfigColors()
                 self.openMainWindowOp()
                 self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
+                self.DBManager.setLoginRegister(self.idCurrentUser, self.uiDraw.fillColor, self.uiDraw.penColor)
                 self.isAdmin = False
                 self.hide()
             else:

@@ -366,12 +366,13 @@ class DrawingApplication(tkinter.Frame):
             ps = screen.getcanvas().postscript( colormode = 'color')
             img = Image.open(io.BytesIO(ps.encode('utf-8')))
             img.show("Dibujo")
+            self.database.setVisualitation(self.idDraw, self.idUser, self.fillColor, self.penColor)
 
 
         if(self.flag == "edit"):
             loadFile(self.contentDraw)
         elif self.flag == "view":
-            print("Show")
+
             loadFile(self.contentDraw)
             saveImg()
 

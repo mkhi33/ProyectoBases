@@ -209,13 +209,38 @@ class DBManager:
         self.engine.update(update)
 
     def getFillColor(self):
+        self.engine.start()
         query = """
         SELECT var_fill_color FROM Color LIMIT 1;
         """
-        return self.engine.select(query)
+        query = self.engine.select(query)
+        self.engine.close()
+        return query
 
     def getPenColor(self):
         query = """
         SELECT var_pen_color FROM Color LIMIT 1;
         """
-        return self.engine.select(query)
+        query = self.engine.select(query)
+        self.engine.close()
+        return query
+
+    def setLoginRegister(self, idUser, fillColor, penColor):
+        self.engine.start()
+        query = """
+        INSERT INTO  enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color VALUES
+            ('Autenticación', %s, NULL,'%s', '%s' )
+            
+        """%(idUser,fillColor, penColor )
+        self.engine.insert(query)
+        self.engine.close()
+    def setVisualitation(self, idDraw, idUser, fillColor, penColor):
+        self.engine.start()
+        query = """
+        INSERT INTO  enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color VALUES
+            ('Visualización', %s, %s,'%s', '%s' )
+            
+
+        """ % (idUser, idDraw, fillColor, penColor)
+        self.engine.insert(query)
+        self.engine.close()
