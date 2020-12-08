@@ -12,6 +12,8 @@ class GuiDraw(QMainWindow):
         super(GuiDraw, self).__init__(parent)
         self.uiDraw = Ui_MainWindow()
         self.uiDraw.setupUi(self)
+        self.penColor = '#000000'
+        self.fillColor = '#000000'
     def deleteAllRows(self):
         # Obtener el modelo de la tabla
         model:QAbstractTableModel = self.uiDraw.tablOptDraw.model()

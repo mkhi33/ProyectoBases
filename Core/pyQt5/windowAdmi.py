@@ -11,11 +11,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(932, 622)
+        MainWindow.resize(1049, 622)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.lblHeader = QtWidgets.QLabel(self.centralwidget)
-        self.lblHeader.setGeometry(QtCore.QRect(0, 0, 941, 41))
+        self.lblHeader.setGeometry(QtCore.QRect(0, 0, 1081, 41))
         font = QtGui.QFont()
         font.setFamily("Saab")
         font.setPointSize(17)
@@ -304,6 +304,78 @@ class Ui_MainWindow(object):
 "}\n"
 "")
         self.btnCancel.setObjectName("btnCancel")
+        self.txtEditPenColor = QtWidgets.QLineEdit(self.centralwidget)
+        self.txtEditPenColor.setGeometry(QtCore.QRect(850, 70, 111, 31))
+        self.txtEditPenColor.setStyleSheet("QLineEdit#txtEditPenColor{\n"
+"    border-radius:15px;\n"
+"    background-color:#16B89B;\n"
+"    text-align:center;\n"
+"}")
+        self.txtEditPenColor.setMaxLength(40)
+        self.txtEditPenColor.setAlignment(QtCore.Qt.AlignCenter)
+        self.txtEditPenColor.setObjectName("txtEditPenColor")
+        self.label_11 = QtWidgets.QLabel(self.centralwidget)
+        self.label_11.setGeometry(QtCore.QRect(860, 50, 91, 17))
+        font = QtGui.QFont()
+        font.setFamily("ori1Uni")
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_11.setFont(font)
+        self.label_11.setObjectName("label_11")
+        self.label_12 = QtWidgets.QLabel(self.centralwidget)
+        self.label_12.setGeometry(QtCore.QRect(860, 170, 91, 17))
+        font = QtGui.QFont()
+        font.setFamily("ori1Uni")
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_12.setFont(font)
+        self.label_12.setObjectName("label_12")
+        self.txtEditFillColor = QtWidgets.QLineEdit(self.centralwidget)
+        self.txtEditFillColor.setGeometry(QtCore.QRect(850, 190, 111, 31))
+        self.txtEditFillColor.setStyleSheet("QLineEdit#txtEditFillColor{\n"
+"    border-radius:15px;\n"
+"    background-color:#16B89B;\n"
+"    text-align:center;\n"
+"}")
+        self.txtEditFillColor.setMaxLength(40)
+        self.txtEditFillColor.setAlignment(QtCore.Qt.AlignCenter)
+        self.txtEditFillColor.setObjectName("txtEditFillColor")
+        self.btnFillColor = QtWidgets.QPushButton(self.centralwidget)
+        self.btnFillColor.setGeometry(QtCore.QRect(900, 220, 61, 41))
+        self.btnFillColor.setStyleSheet("QPushButton#btnFillColor{\n"
+"          border-radius: 15px;\n"
+"          background-color: #1A3C49;;\n"
+"         border: none;\n"
+"         color: #FFFFFF;\n"
+"         text-align: center;\n"
+"          font-size: 14px;\n"
+"          margin: 5px;\n"
+"}\n"
+"\n"
+"QPushButton#btnFillColor:hover {\n"
+"    background-color: #8174A8;\n"
+"    cursor:pointer;\n"
+"}\n"
+"")
+        self.btnFillColor.setObjectName("btnFillColor")
+        self.btnPenColor = QtWidgets.QPushButton(self.centralwidget)
+        self.btnPenColor.setGeometry(QtCore.QRect(900, 100, 61, 41))
+        self.btnPenColor.setStyleSheet("QPushButton#btnPenColor{\n"
+"          border-radius: 15px;\n"
+"          background-color: #1A3C49;;\n"
+"         border: none;\n"
+"         color: #FFFFFF;\n"
+"         text-align: center;\n"
+"          font-size: 14px;\n"
+"          margin: 5px;\n"
+"}\n"
+"\n"
+"QPushButton#btnPenColor:hover {\n"
+"    background-color: #8174A8;\n"
+"    cursor:pointer;\n"
+"}\n"
+"")
+        self.btnPenColor.setObjectName("btnPenColor")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -358,5 +430,11 @@ class Ui_MainWindow(object):
         self.txtUserName.setPlaceholderText(_translate("MainWindow", "Nombre Usuario"))
         self.label_10.setText(_translate("MainWindow", "Nombre de usuario"))
         self.btnCancel.setText(_translate("MainWindow", "Cancelar"))
+        self.txtEditPenColor.setPlaceholderText(_translate("MainWindow", "Codigo de color"))
+        self.label_11.setText(_translate("MainWindow", "Pen Color:"))
+        self.label_12.setText(_translate("MainWindow", "Fill Color:"))
+        self.txtEditFillColor.setPlaceholderText(_translate("MainWindow", "Codigo de color"))
+        self.btnFillColor.setText(_translate("MainWindow", "Elegir"))
+        self.btnPenColor.setText(_translate("MainWindow", "Elegir"))
 
 #import resource_rc

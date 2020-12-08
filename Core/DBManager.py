@@ -164,3 +164,28 @@ class DBManager:
         self.engine.delete(query)
         self.engine.close()
         return True
+    def setFillColor(self, fillColor):
+        self.engine.start()
+        update = """
+                 UPDATE Color SET var_fill_color = '%s'
+                 """ % (fillColor )
+        self.engine.update(update)
+
+    def setPenColor(self, penColor):
+        self.engine.start()
+        update = """
+                 UPDATE Color SET var_pen_color = '%s'
+                 """ % (penColor )
+        self.engine.update(update)
+
+    def getFillColor(self):
+        query = """
+        SELECT var_fill_color FROM Color LIMIT 1;
+        """
+        return self.engine.select(query)
+
+    def getPenColor(self):
+        query = """
+        SELECT var_pen_color FROM Color LIMIT 1;
+        """
+        return self.engine.select(query)

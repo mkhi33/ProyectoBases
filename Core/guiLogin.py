@@ -1,7 +1,7 @@
 #-*-coding:utf-8 -*-
 import sys
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QColorDialog
 
 from Core.DrawingApplication import DrawingApplication
 from Core.pyQt5.windowLogin import Ui_MainWindow
@@ -33,6 +33,8 @@ class GUILogin(QMainWindow):
         self.userPrimaryKey = ""
         self.operation = "save"
         self.idCurrentUser = -1
+        self.isAdmin = False
+
 
 
 
@@ -83,7 +85,21 @@ class GUILogin(QMainWindow):
         self.uiAdmin.uiAdmin.btnCancel.clicked.connect(self.cancelAction)
         self.uiAdmin.uiAdmin.btnNewUser.clicked.connect(self.createNewUser)
         self.uiAdmin.uiAdmin.btnDeleteUser.clicked.connect(self.openDialogDelete)
+        self.uiAdmin.uiAdmin.btnFillColor.clicked.connect(self.setFillColor)
+        self.uiAdmin.uiAdmin.btnPenColor.clicked.connect(self.setPenColor)
 
+    def setPenColor(self):
+        color = QColorDialog.getColor()
+        if(color.isValid()):
+            self.DBManager.setPenColor(color.name())
+            self.uiAdmin.uiAdmin.txtEditPenColor.setText(color.name())
+            self.uiDraw.penColor = color.name()
+    def setFillColor(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.DBManager.setFillColor(color.name())
+            self.uiAdmin.uiAdmin.txtEditFillColor.setText(color.name())
+            self.uiDraw.fillColor = color.name()
 
     def login(self):
         user = self.uiLogin.txtUser.text()
@@ -93,25 +109,35 @@ class GUILogin(QMainWindow):
             if(self.DBManager.login(user, password, 'Administrador')):
                 self.idCurrentUser = self.DBManager.engine.select(queryUser)[0][0]
                 self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
+                self.getConfigColors()
                 self.openMainWindowAdmin()
+                self.isAdmin = True
                 self.hide()
             else:
                 self.uiNotification.uiNotification.btnNo.setVisible(False)
                 self.uiNotification.uiNotification.lblQuestion.setText("Error al autenticar")
+                self.isAdmin = False
 
                 self.uiNotification.show()
         elif self.uiLogin.rbtOperador.isChecked():
             if (self.DBManager.login(user, password, 'Operador')):
                 self.idCurrentUser = self.DBManager.engine.select(queryUser)[0][0]
+                self.getConfigColors()
                 self.openMainWindowOp()
                 self.uiDraw.uiDraw.chkMyDraw.setChecked(True)
+                self.isAdmin = False
                 self.hide()
             else:
                 self.uiNotification.uiNotification.btnNo.setVisible(False)
                 self.uiNotification.uiNotification.lblQuestion.setText("Error al autenticar")
                 self.uiNotification.show()
+                self.isAdmin = False
 
 
+    def getConfigColors(self):
+
+        self.uiDraw.penColor = self.DBManager.getPenColor()[0][0]
+        self.uiDraw.fillColor = self.DBManager.getFillColor()[0][0]
 
     def registryByAdm(self):
 
@@ -263,12 +289,10 @@ class GUILogin(QMainWindow):
             id = row[0]
             self.uiDraw.close()
             draw = self.DBManager.getDraw(id)[0][0]
+            drawingApp = DrawingApplication(None, "view", draw)
+            drawingApp.master.destroy()
 
-            root = tkinter.Tk()
-            drawingApp = DrawingApplication(root, "view", draw)
 
-            drawingApp.master.quit()
-            drawingApp.mainloop()
 
     def editDraw(self):
         row = self.uiDraw.getRowValues()
@@ -276,20 +300,40 @@ class GUILogin(QMainWindow):
             self.uiDraw.close()
             id = row[0]
             draw = self.DBManager.getDraw(id)[0][0]
-
             root = tkinter.Tk()
-
-            drawingApp = DrawingApplication(root, "edit", draw)
+            drawingApp = DrawingApplication(root, "edit", draw, isAdmin=self.isAdmin, penColor= self.uiDraw.penColor, fillColor= self.uiDraw.fillColor)
             if(self.uiDraw.uiDraw.chkMyDraw.isChecked()):
                 drawingApp.idUser = self.idCurrentUser
             else:
                 drawingApp.idUser = row[1]
             drawingApp.idDraw = id
-
             drawingApp.mainloop()
+            if (drawingApp.reload == 'load'):
+                self.uiDraw.uiDraw.btnOpViewDraw.setVisible(False)
+                self.uiDraw.uiDraw.btnOpeNewDraw.setVisible(False)
+                self.uiDraw.uiDraw.btnOpDeleteDraw.setVisible(False)
+                self.uiDraw.uiDraw.btnOptEditDraw.setText("Aceptar")
+                self.uiDraw.show()
+
+            if (drawingApp.reload == 'close'):
+                self.uiDraw.uiDraw.btnOpViewDraw.setVisible(True)
+                self.uiDraw.uiDraw.btnOpeNewDraw.setVisible(True)
+                self.uiDraw.uiDraw.btnOpDeleteDraw.setVisible(True)
+                self.uiDraw.uiDraw.btnOptEditDraw.setText("Editar")
+
+            if(drawingApp.reload == 'new'):
+                self.openTkinterDraw()
+            if(drawingApp.reload == 'config' ):
+                self.openWindowAdminUsr()
+
+
+
+            #drawingApp.signal.connect(self.openWindowDraw())
+            #drawingApp.signal.connect(self.openWindowDraw)
         else:
             text = "¡Error!\nNo se a seleccionado ningun elemento"
             self.openDialogNotification(text)
+
     def eventChek(self):
         if(self.uiDraw.uiDraw.chkMyDraw.isChecked()):
             self.updateTableDraws()
@@ -300,9 +344,27 @@ class GUILogin(QMainWindow):
     def openTkinterDraw(self):
         self.uiDraw.close()
         root = tkinter.Tk()
-        drawingApp = DrawingApplication(root, "save")
+        drawingApp = DrawingApplication(root, flag="save", isAdmin = self.isAdmin, penColor= self.uiDraw.penColor, fillColor= self.uiDraw.fillColor)
         drawingApp.idUser = self.idCurrentUser
         drawingApp.mainloop()
+
+        if (drawingApp.reload == 'load'):
+            self.uiDraw.uiDraw.btnOpViewDraw.setVisible(False)
+            self.uiDraw.uiDraw.btnOpeNewDraw.setVisible(False)
+            self.uiDraw.uiDraw.btnOpDeleteDraw.setVisible(False)
+            self.uiDraw.uiDraw.btnOptEditDraw.setText("Aceptar")
+            self.uiDraw.show()
+
+        if (drawingApp.reload == 'close'):
+            self.uiDraw.uiDraw.btnOpViewDraw.setVisible(True)
+            self.uiDraw.uiDraw.btnOpeNewDraw.setVisible(True)
+            self.uiDraw.uiDraw.btnOpDeleteDraw.setVisible(True)
+            self.uiDraw.uiDraw.btnOptEditDraw.setText("Editar")
+        if(drawingApp.reload == 'new'):
+            self.openTkinterDraw()
+        if(drawingApp.reload == 'config' ):
+            self.openWindowAdminUsr()
+
     def saveDraw(self):
         pass
 
@@ -376,6 +438,8 @@ class GUILogin(QMainWindow):
         self.uiMainAdmin.show()
 
     def openWindowAdminUsr(self):
+        self.uiAdmin.uiAdmin.txtEditFillColor.setDisabled(True)
+        self.uiAdmin.uiAdmin.txtEditPenColor.setDisabled(True)
         self.updateTable()
         self.uiAdmin.show()
     def updateTable(self):

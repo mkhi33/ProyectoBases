@@ -1,29 +1,37 @@
 from Core.draw_tkinter import *
 import json
 import io
-import os
 from PIL import Image
-from tkinter import simpledialog
+from tkinter import simpledialog, messagebox
 from Core.DBManager import DBManager
-from Core.MySqlEngine import MySqlEngine
-from Core.ConnectionConfig import ConnectionConfig
+from PyQt5.QtCore import QThread, pyqtSignal, QBasicTimer
+from Core.guiDraw import GuiDraw
 class DrawingApplication(tkinter.Frame):
-    def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = True):
+
+    def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = False, penColor = "#000000", fillColor = "#000000" ):
         super().__init__(master)
         self.idUser = -1
         self.idDraw = -1
         self.contentDraw = contentDraw
         self.flag = flag
         self.pack()
-        self.buildWindow()
+        self.uiDraw = GuiDraw()
+        self.reload = 'load'
         self.graphicsCommands = PyList()
         self.database = DBManager()
         self.isAdmin = isAdmin
         self.count = 0
+        self.penColor = penColor
+        self.fillColor = fillColor
+        self.buildWindow()
+
     def buildWindow(self):
+
+
         self.master.title("Draw")
         bar = tkinter.Menu(self.master)
         fileMenu = tkinter.Menu(bar, tearoff=0)
+
         def newWindow():
             theTurtle.pen()
             theTurtle.penup()
@@ -32,7 +40,11 @@ class DrawingApplication(tkinter.Frame):
             screen.update()
             screen.listen()
             self.graphicsCommands = PyList()
-        fileMenu.add_command(label="New", command=newWindow)
+        def cleanWindow():
+            self.reload = 'new'
+            self.master.destroy()
+        fileMenu.add_command(label="Nuevo", command=cleanWindow)
+
         def loadDraw(file):
             data = json.loads(file)
             for i in range(len(data.items())):
@@ -97,7 +109,9 @@ class DrawingApplication(tkinter.Frame):
 
                 graphicsCommands.append(cmd)
 
+
         def loadFile(filename = ""):
+
             newWindow()
             if(self.flag != 'edit'):
                 self.graphicsCommands = PyList()
@@ -106,7 +120,21 @@ class DrawingApplication(tkinter.Frame):
                 cmd.draw(theTurtle)
             screen.update()
 
-        fileMenu.add_command(label="Cargar...", command=loadFile)
+        def loadFromDataBase():
+            self.reload = 'load'
+            self.master.destroy()
+
+        def on_closing():
+            if messagebox.askokcancel("Salir", "¿Quiere salir?"):
+                self.reload = 'close'
+                self.master.destroy()
+        self.master.protocol("WM_DELETE_WINDOW", on_closing)
+
+        if(self.isAdmin):
+            fileMenu.add_command(label="Cargar...", command=loadFromDataBase)
+
+
+
 
         def addToFile():
             filename = tkinter.filedialog.askopenfilename(title="Selecciona una")
@@ -168,25 +196,36 @@ class DrawingApplication(tkinter.Frame):
                 writeJson(fileName)
 
 
-        fileMenu.add_command(label="Guardar como...", command=saveFile)
 
-        fileMenu.add_command(label="Salir", command=self.master.destroy)
+
+        fileMenu.add_command(label="Guardar como...", command=saveFile)
+        def configuration():
+            self.reload = 'config'
+            self.master.destroy()
+        if self.isAdmin:
+            fileMenu.add_command(label = "Configurar", command = configuration)
+
+
+        fileMenu.add_command(label="Salir", command=on_closing)
 
         bar.add_cascade(label="File", menu=fileMenu)
-
         self.master.config(menu=bar)
 
 
         canvas = tkinter.Canvas(self, width=600, height=600)
         canvas.pack(side=tkinter.LEFT)
-
+        # Hasta aquí
         theTurtle = turtle.RawTurtle(canvas)
-
+        theTurtle.pencolor(self.penColor)
+        theTurtle.fillcolor(self.fillColor)
+        if self.flag == "view":
+            self.master.withdraw()
         theTurtle.shape("circle")
         screen = theTurtle.getscreen()
 
 
         screen.tracer(0)
+
 
         sideBar = tkinter.Frame(self, padx=5, pady=5)
         sideBar.pack(side=tkinter.RIGHT, fill=tkinter.BOTH)
@@ -225,7 +264,7 @@ class DrawingApplication(tkinter.Frame):
         penEntry = tkinter.Entry(sideBar, textvariable=penColor)
         penEntry.pack()
 
-        penColor.set("#000000")
+        penColor.set(self.penColor)
 
         def getPenColor():
             color = tkinter.colorchooser.askcolor()
@@ -239,7 +278,7 @@ class DrawingApplication(tkinter.Frame):
         fillColor = tkinter.StringVar()
         fillEntry = tkinter.Entry(sideBar, textvariable=fillColor)
         fillEntry.pack()
-        fillColor.set("#000000")
+        fillColor.set(self.fillColor)
 
         def getFillColor():
             color = tkinter.colorchooser.askcolor()
@@ -316,13 +355,11 @@ class DrawingApplication(tkinter.Frame):
                     cmd.draw(theTurtle)
                 screen.update()
                 screen.listen()
-        def configure():
-            pass
         def saveImg():
-            #self.master.withdraw()
             ps = screen.getcanvas().postscript( colormode = 'color')
             img = Image.open(io.BytesIO(ps.encode('utf-8')))
             img.show("Dibujo")
+
 
         if(self.flag == "edit"):
             loadFile(self.contentDraw)
