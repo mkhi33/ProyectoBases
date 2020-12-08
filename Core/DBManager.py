@@ -5,18 +5,17 @@ from Core.MySqlEngine import MySqlEngine
 import configparser
 class DBManager:
     def __init__(self):
-        self.configuration = configparser.ConfigParser()
-        self.configuration['config'] = {'port': '3306', 'user': 'admin', 'password': 'admin', 'database': 'DataBaseA',
-                            'host': 'localhost'}
-        self.host = self.configuration['config']['host']
-        self.user = self.configuration['config']['user']
-        self.port = self.configuration['config']['port']
-        self.password = self.configuration['config']['password']
-        self.database = self.configuration['config']['database']
+        self.configA = ConnectionConfig("ConfigurationA")
+        self.configB = ConnectionConfig("ConfigurationB")
+        #self.config = ConnectionConfig(self.host,self.port, self.user,self.password, self.database)
+        self.engine = MySqlEngine(self.configA)
+        self.engineB = MySqlEngine(self.configB)
 
+    def getIni(self):
+        configuration = configparser.ConfigParser()
+        configuration.write()
+        config = configuration.read('config.ini')
 
-        self.config = ConnectionConfig(self.host,self.port, self.user,self.password, self.database)
-        self.engine = MySqlEngine(self.config)
 
     def login(self, name, password, userType):
         self.engine.start()
@@ -114,21 +113,36 @@ class DBManager:
 
     def saveDraw(self, name, jsonFile, idUser):
         self.engine.start()
-        insertDraw = """
+        self.engineB.start()
+        insertDrawA = """
                 INSERT INTO Drawing(txt_name, jso_file, fk_id_usuario) VALUES
                 ('%s','%s', %s)"""%(name, jsonFile, idUser)
-        self.engine.insert(insertDraw)
+
+        insertDrawB = """
+        INSERT INTO DrawingB(blo_jso_file, int_id_user) VALUES
+        (compress('%s'),%s)
+        """%(jsonFile, idUser)
+
+        self.engine.insert(insertDrawA)
+        self.engineB.insert(insertDrawB)
+
         self.engine.close()
+        self.engineB.close()
 
     def editDraw(self, name, jsonFile, idUser, idDraw):
         self.engine.start()
-        print("Id user: %s"%idUser)
-        update = """
+        self.engineB.start()
+        updateA = """
                 UPDATE Drawing SET txt_name = '%s', jso_file = '%s' WHERE fk_id_usuario = %s AND id = %s
                 """%(name, jsonFile, idUser, idDraw)
-        print("EditDraw")
-        self.engine.update(update)
+
+        updateB = """
+        UPDATE DrawingB SET blo_jso_file = compress('%s') WHERE int_id_user = %s AND id = %s
+        """%(jsonFile, idUser, idDraw)
+        self.engine.update(updateA)
+        self.engineB.update(updateB)
         self.engine.close()
+        self.engineB.close()
 
     def getDraw(self, idDraw):
         self.engine.start()
@@ -156,13 +170,29 @@ class DBManager:
         query = self.engine.select(query)
         self.engine.close()
         return query
+    def getDrawingB(self, idDraw):
+        self.engineB.start()
+        query = """
+            SELECT  uncompress(blo_jso_file) FROM DrawingB WHERE id = %s;
+        """%idDraw
+        query = self.engineB.select(query)
+        self.engineB.close()
+        return query
     def deleteDraw(self, id):
         self.engine.start()
-        query = """
+        self.engineB.start()
+        queryA = """
         DELETE FROM Drawing WHERE id = %s
         """%id
-        self.engine.delete(query)
+        self.engine.delete(queryA)
+
+        queryB = """
+        DELETE From DrawingB WHERE id = %s
+        """%id
+        self.engineB.delete(queryB)
         self.engine.close()
+        self.engineB.close()
+
         return True
     def setFillColor(self, fillColor):
         self.engine.start()

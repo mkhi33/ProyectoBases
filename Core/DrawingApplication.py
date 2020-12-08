@@ -162,7 +162,9 @@ class DrawingApplication(tkinter.Frame):
         def downloadJson():
             filename = tkinter.filedialog.asksaveasfilename(title="Guardar JSON como...")
             if(filename != ""):
-                write(filename)
+                saveJson(filename)
+                print("Se escribio")
+
 
         fileMenu.add_command(label="Descargar JSON", command=downloadJson)
 
@@ -186,6 +188,11 @@ class DrawingApplication(tkinter.Frame):
                     self.count += 1
 
                 self.database.editDraw(filename, json.dumps(self.contentDraw), self.idUser, self.idDraw)
+
+        def saveJson(filename):
+            content = self.database.getDrawingB(self.idDraw)[0][0]
+            with open(filename, 'w') as file:
+                json.dump(content, file, indent=4)
 
 
 

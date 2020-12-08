@@ -1,6 +1,6 @@
 class Encriptacion():
  
-    def encriptar(self,txt):
+    def encrypt(self,txt):
         mensajeEncriptado = ''
         for letra in txt :
             x = self.convertirDecimal_a_Binario(ord(letra))
@@ -59,25 +59,3 @@ class Desencriptacion() :
  
  
  
- 
-print("Menu : Encriptar y Desencriptar mensajes en binario ")
-n = Encriptacion();
-x = Desencriptacion();
- 
-print("Opcion 1 : Encriptar un texto")
-print("Opcion 2 : Desencriptar un texto")
-print("Opcion 0 : Salir")
- 
-i = int(input("Opcion : "))
- 
-while i != 0 :
- 
-    if i == 1 :
-        print(n.encriptar(input("Introduzca el texto a encriptar: ")))
-    elif i == 2 :
-        print(x.Desencriptar(input("Introduzca el texto a desencriptar (en binario): ")))
-    else :
-        print("Comando no reconocido")
- 
- 
-    i = int(input("Opcion: "))
