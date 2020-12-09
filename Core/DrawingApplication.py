@@ -8,10 +8,10 @@ from PyQt5.QtCore import QThread, pyqtSignal, QBasicTimer
 from Core.guiDraw import GuiDraw
 class DrawingApplication(tkinter.Frame):
 
-    def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = False, penColor = "#000000", fillColor = "#000000" ):
+    def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = False, penColor = "#000000", fillColor = "#000000", idUser = -1, idDraw = -1 ):
         super().__init__(master)
-        self.idUser = -1
-        self.idDraw = -1
+        self.idUser = idUser
+        self.idDraw = idDraw
         self.contentDraw = contentDraw
         self.flag = flag
         self.pack()

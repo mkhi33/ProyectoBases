@@ -208,6 +208,7 @@ class DBManager:
                  """ % (penColor )
         self.engine.update(update)
 
+
     def getFillColor(self):
         self.engine.start()
         query = """
@@ -228,19 +229,40 @@ class DBManager:
     def setLoginRegister(self, idUser, fillColor, penColor):
         self.engine.start()
         query = """
-        INSERT INTO  enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color VALUES
-            ('Autenticación', %s, NULL,'%s', '%s' )
+        INSERT INTO Registry  (enu_action, fk_id_usuario, var_fill_color, var_pen_color) VALUES
+            ('Autenticación', %s ,'%s', '%s' )
             
-        """%(idUser,fillColor, penColor )
+        """%(int(idUser),fillColor, penColor )
+        print(query)
         self.engine.insert(query)
         self.engine.close()
     def setVisualitation(self, idDraw, idUser, fillColor, penColor):
         self.engine.start()
         query = """
-        INSERT INTO  enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color VALUES
+        INSERT INTO Registry (enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color) VALUES
             ('Visualización', %s, %s,'%s', '%s' )
             
 
         """ % (idUser, idDraw, fillColor, penColor)
+
         self.engine.insert(query)
         self.engine.close()
+    def setConfigurationPenColor(self, idUser, pencolor, fillcolor):
+        self.engine.start()
+        query = """
+        INSERT INTO Registry (enu_action, fk_id_usuario, var_fill_color, var_pen_color) VALUES
+            ('Configuración', %s, '%s', '%s')
+        """%(idUser, fillcolor, pencolor)
+
+        self.engine.insert(query)
+        self.engine.close()
+    def getRegistries(self, idUser):
+        self.engine.start()
+        query = """
+        SELECT * FROM Registry WHERE fk_id_usuario = %s
+        """%idUser
+        print(idUser)
+        print(query)
+        query = self.engine.select(query)
+        self.engine.close()
+        return query

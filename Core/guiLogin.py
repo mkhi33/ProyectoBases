@@ -94,12 +94,15 @@ class GUILogin(QMainWindow):
             self.DBManager.setPenColor(color.name())
             self.uiAdmin.uiAdmin.txtEditPenColor.setText(color.name())
             self.uiDraw.penColor = color.name()
+            self.DBManager.setConfigurationPenColor(self.idCurrentUser, color.name(), self.uiDraw.fillColor)
     def setFillColor(self):
         color = QColorDialog.getColor()
         if color.isValid():
             self.DBManager.setFillColor(color.name())
             self.uiAdmin.uiAdmin.txtEditFillColor.setText(color.name())
             self.uiDraw.fillColor = color.name()
+            self.DBManager.setConfigurationPenColor(self.idCurrentUser,self.uiDraw.penColor, color.name())
+
 
     def login(self):
         user = self.uiLogin.txtUser.text()
@@ -289,9 +292,11 @@ class GUILogin(QMainWindow):
 
         if not None in row:
             id = row[0]
+            idUser = row[1]
             self.uiDraw.close()
             draw = self.DBManager.getDraw(id)[0][0]
-            drawingApp = DrawingApplication(None, "view", draw)
+            drawingApp = DrawingApplication(None, flag = "view",contentDraw= draw, idDraw= id, idUser=idUser)
+
             drawingApp.master.destroy()
 
 
@@ -383,6 +388,7 @@ class GUILogin(QMainWindow):
 
 
     def openWindowBinnacle(self):
+        self.updateBinnacle()
         self.uiBinnacle.show()
     def closeWindowMainAdmin(self):
 
@@ -457,7 +463,8 @@ class GUILogin(QMainWindow):
         self.uiNotification.close()
         self.uiNotification.uiNotification.btnYes.setVisible(True)
 
-
-
+    def updateBinnacle(self):
+        registries = self.DBManager.getRegistries(self.idCurrentUser)
+        self.uiBinnacle.updateTable(registries)
         
 
