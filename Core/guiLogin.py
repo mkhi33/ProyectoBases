@@ -13,8 +13,7 @@ from Core.guiDraw import GuiDraw
 from Core.guiDialogNotification import GuiDialogNotification
 from Core.guiDialogQuestion import GuiDialogQuestion
 from Core.guiShowImage import GuiShowImage
-from PyQt5.QtCore import QDate, Qt
-from datetime import  datetime
+
 
 from Core.draw_tkinter import *
 from Core.DBManager import *
@@ -34,10 +33,6 @@ class GUILogin(QMainWindow):
         self.operation = "save"
         self.idCurrentUser = -1
         self.isAdmin = False
-
-
-
-
         # Instancias de las ventanas graficas
         self.uiAdmin = GUIAdmin()
         self.uiMainAdmin = GUIMainAdmin()

@@ -67,7 +67,3 @@ class GuiDraw(QMainWindow):
             value = self.uiDraw.tablOptDraw.model().data(item)
             listItems.append(value)
         return  listItems
-
-
-
-

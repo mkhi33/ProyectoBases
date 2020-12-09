@@ -4,6 +4,7 @@ from Core.DBManager import DBManager
 from Core.user import User
 from Core.encrypt import *
 from Core.compress import Compress
+import hashlib
 
 
 
@@ -117,7 +118,16 @@ def getIni():
 def getDraw():
     draw = DBM.getDrawingB(2)[0][0]
     print(draw)
-getDraw()
+
+def encryptData(password):
+    query = """
+    INSERT INTO Registry (enu_action, fk_id_usuario, fk_id_dibujo, var_fill_color, var_pen_color) VALUES
+        ('%s', aes_encrypt('%s', '%s'), aes_encrypt('%s', '%s'), aes_encrypt('%s', '%s'), aes_encrypt('%s', '%s'))
+    """%("Visualización", 1, password,1, password,'#000000', password,'#000000', password)
+    DBM.engine.start()
+    DBM.engine.insert(query)
+    DBM.engine.close()
+
 
 
 

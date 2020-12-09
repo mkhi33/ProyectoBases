@@ -1,4 +1,3 @@
-from builtins import print
 import json
 from Core.ConnectionConfig import ConnectionConfig
 from Core.MySqlEngine import MySqlEngine
@@ -21,8 +20,8 @@ class DBManager:
         self.engine.start()
         query = """
         SELECT fk_var_user_name, txt_password FROM User
-            WHERE fk_var_user_name = '%s' AND txt_password = '%s' AND enu_type = '%s'
-        """%(name, password,userType )
+            WHERE fk_var_user_name = '%s' AND txt_password = AES_ENCRYPT('%s','%s') AND enu_type = '%s'
+        """%(name, password,password,userType )
   
         if(len(self.engine.select(query))>0):
             return True
@@ -49,13 +48,10 @@ class DBManager:
             self.engine.insert(insertFullName)
             insertUser = """
                     INSERT INTO User(fk_var_user_name, txt_password, var_email, enu_gender, enu_type, dat_birthdate) VALUES
-                    ('%s','%s', '%s', '%s', '%s', '%s');
-                """%(userName,password,email,gender, userType, birthDate)
+                    ('%s','AES_ENCRYPT('%s', '%s'), '%s', '%s', '%s', '%s');
+                """%(userName,password, password,email,gender, userType, birthDate)
             self.engine.insert(insertUser)
-            print("Si se agrego")
         except AssertionError as error:
-            print(error)
-            print("No se agrego")
             self.engine.close()
     
     def getUsers(self):
@@ -87,14 +83,13 @@ class DBManager:
                             """%(userName, name, lastName, primariKey)
             self.engine.update(updateFullName)  
             updateUser = """
-                    UPDATE User SET  txt_password = '%s', var_email = '%s', enu_gender = '%s', enu_type = '%s', dat_birthdate = '%s'
+                    UPDATE User SET  txt_password = AES_ENCRYPT('%s','%s'), var_email = '%s', enu_gender = '%s', enu_type = '%s', dat_birthdate = '%s'
                     WHERE fk_var_user_name = '%s';
-                """%(password,email,gender, userType, birthDate, userName)
+                """%(password, password,email,gender, userType, birthDate, userName)
             
             self.engine.update(updateUser)  
-            print("Si se actualizo")
         except:
-            print("No se actualizo")
+            pass
         self.engine.close()
 
     def delete(self,userName):
@@ -106,9 +101,8 @@ class DBManager:
             deleteFullName = "DELETE FROM FullName WHERE var_user_name = '%s'"%(userName)
 
             self.engine.delete(deleteFullName)
-            print("Se elimino")
         except:
-            print("No se pudo eliminar")
+            pass
         self.engine.close
 
     def saveDraw(self, name, jsonFile, idUser):
@@ -134,11 +128,11 @@ class DBManager:
         self.engineB.start()
         updateA = """
                 UPDATE Drawing SET txt_name = '%s', jso_file = '%s' WHERE fk_id_usuario = %s AND id = %s
-                """%(name, jsonFile, idUser, idDraw)
+                """ % (name, jsonFile, idUser, idDraw)
 
         updateB = """
         UPDATE DrawingB SET blo_jso_file = compress('%s') WHERE int_id_user = %s AND id = %s
-        """%(jsonFile, idUser, idDraw)
+        """ % (jsonFile, idUser, idDraw)
         self.engine.update(updateA)
         self.engineB.update(updateB)
         self.engine.close()
@@ -148,7 +142,7 @@ class DBManager:
         self.engine.start()
         query = """
         SELECT jso_file FROM Drawing WHERE id = %s
-        """%(idDraw)
+        """ % (idDraw)
         query = self.engine.select(query)
         self.engine.close()
         return query
@@ -166,7 +160,7 @@ class DBManager:
         self.engine.start()
         query = """
             SELECT id, fk_id_Usuario, txt_name, dat_creation_date, tim_modification_date FROM Drawing WHERE fk_id_Usuario = %s;
-        """%fkIdUser
+        """ % fkIdUser
         query = self.engine.select(query)
         self.engine.close()
         return query
@@ -233,7 +227,6 @@ class DBManager:
             ('Autenticación', %s ,'%s', '%s' )
             
         """%(int(idUser),fillColor, penColor )
-        print(query)
         self.engine.insert(query)
         self.engine.close()
     def setVisualitation(self, idDraw, idUser, fillColor, penColor):
@@ -259,10 +252,8 @@ class DBManager:
     def getRegistries(self, idUser):
         self.engine.start()
         query = """
-        SELECT * FROM Registry WHERE fk_id_usuario = %s
+        SELECT *  FROM Registry WHERE fk_id_usuario = %s
         """%idUser
-        print(idUser)
-        print(query)
         query = self.engine.select(query)
         self.engine.close()
         return query
