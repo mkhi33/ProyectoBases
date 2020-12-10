@@ -15,8 +15,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit
 
 
 """
-Este es el script principal, al iniciar se habre la ventana de inicio de sesión que es la ventana que gestiona
-todas las demas ventanas.
+Este es el script principal, al iniciar se abre la ventana de inicio de sesión que es la ventana que gestiona
+todas las demás ventanas.
 """
 
 if __name__ == "__main__":
