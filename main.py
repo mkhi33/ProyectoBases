@@ -1,4 +1,10 @@
+#-*-coding:utf-8 -*-
 
+"""
+@autor: Xenia Larissa Alfaro, Juan Carlos Boquin, Matt Saravia, Amilcar Antonio Rodriguez
+@date: 2020/12/09
+@versión 1.0
+"""
 
 import sys
 from Core.draw_tkinter import *
