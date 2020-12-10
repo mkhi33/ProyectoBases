@@ -1,3 +1,10 @@
+#-*-coding:utf-8 -*-
+
+"""
+@autor: Xenia Larissa Alfaro, Juan Carlos Boquin, Matt Saravia, Amilcar Antonio Rodriguez
+@date: 2020/12/09
+@versión 1.0
+"""
 from Core.draw_tkinter import *
 import json
 import io
@@ -7,8 +14,22 @@ from Core.DBManager import DBManager
 from PyQt5.QtCore import QThread, pyqtSignal, QBasicTimer
 from Core.guiDraw import GuiDraw
 class DrawingApplication(tkinter.Frame):
+    """
+    Esta clase maneja una ventana de tkinter mediante la cual se puede dibujar, editar, eliminar dibujos
+    """
 
     def __init__(self, master=None, flag = None, contentDraw = None, isAdmin = False, penColor = "#000000", fillColor = "#000000", idUser = -1, idDraw = -1 ):
+        """
+        @name: __init__
+        @param master: objeto tkinter.TK()
+        @param flag: Bandera (edit, view, save) segun la acción que realiza el usuario.
+        @param contentDraw: contenido en cadena String en formato JSON del contenido del dibujo.
+        @param isAdmin: Booleano que indica si el usuario es administrador.
+        @param pencColor: Color del lapiz.
+        @param fillColor: color fillcolor.
+        @param idUser: id de usuario
+        @param idDraw: id del dibujo.
+        """
         super().__init__(master)
         self.idUser = idUser
         self.idDraw = idDraw
@@ -26,13 +47,21 @@ class DrawingApplication(tkinter.Frame):
         self.buildWindow()
 
     def buildWindow(self):
-
-
+        """
+        @name: buildWindow
+        @param: no recibe parametros.
+        @description: Construye la ventana grafica del dibujo.
+        """
         self.master.title("Draw")
         bar = tkinter.Menu(self.master)
         fileMenu = tkinter.Menu(bar, tearoff=0)
 
         def newWindow():
+            """
+            @name newWindow
+            @param: no recibe parametros.
+            @description: Función interna que genera una nueva ventana.
+            """
             theTurtle.pen()
             theTurtle.penup()
             theTurtle.goto(0, 0)
@@ -41,11 +70,22 @@ class DrawingApplication(tkinter.Frame):
             screen.listen()
             self.graphicsCommands = PyList()
         def cleanWindow():
+            """
+            @name: cleanWindow
+            @param: no recibe parametros.
+            @description limpia la ventana de dibujo destruyéndola.
+            """
             self.reload = 'new'
             self.master.destroy()
         fileMenu.add_command(label="Nuevo", command=cleanWindow)
 
         def loadDraw(file):
+            """
+            @name loadDraw
+            @param file: contenido del dibujo en String
+            @description: Carga un dibujo desde un string con formato de diccionario.
+            @return: No retorna.
+            """
             data = json.loads(file)
             for i in range(len(data.items())):
 
@@ -73,45 +113,13 @@ class DrawingApplication(tkinter.Frame):
                     raise RuntimeError("Comando desconocido "+data["%s"%i]["command"] )
                 self.graphicsCommands.append(cmd)
 
-
-
-        def parse(filename):
-            xmldoc = xml.dom.minidom.parse(filename)
-            graphicsCommandsElement = xmldoc.getElementsByTagName("GraphicsCommands")[0]
-            graphicsCommands = graphicsCommandsElement.getElementsByTagName("Command")
-            for commandElement in graphicsCommands:
-
-                command = commandElement.firstChild.data.strip()
-
-                attr = commandElement.attributes
-                if command == "GoTo":
-                    x = float(attr["x"].value)
-                    y = float(attr["y"].value)
-                    width = float(attr["width"].value)
-                    color = attr["color"].value.strip()
-                    cmd = GoToCommand(x, y, width, color)
-                elif command == "Circle":
-                    radius = float(attr["radius"].value)
-                    width = float(attr["width"].value)
-                    color = attr["color"].value.strip()
-                    cmd = CircleCommand(radius, width, color)
-                elif command == "BeginFill":
-                    color = attr["color"].value.strip()
-                    cmd = BeginFillCommand(color)
-                elif command == "EndFill":
-                    cmd = EndFillCommand()
-                elif command == "PenUp":
-                    cmd = PenUpCommand()
-                elif command == "PenDown":
-                    cmd = PenDownCommand()
-                else:
-                    raise RuntimeError("Comando desconocido " + command)
-
-                graphicsCommands.append(cmd)
-
-
         def loadFile(filename = ""):
-
+            """
+            @name: loadFile
+            @param fileName: nombre de arcivo
+            @description: Carga un dibujo a partir de un archivo
+            @return No retorna.
+            """
             newWindow()
             if(self.flag != 'edit'):
                 self.graphicsCommands = PyList()
@@ -121,10 +129,22 @@ class DrawingApplication(tkinter.Frame):
             screen.update()
 
         def loadFromDataBase():
+            """
+            @name: loadFromDataBase
+            @param: No recibe parametros.
+            @description: asigna una bandera de carga de archivo.
+            """
             self.reload = 'load'
             self.master.destroy()
 
         def on_closing():
+            """
+            @name: on_closing
+            @param: No recibe parametros.
+            @description: muestra un  dialogo de confirmación, en caso de aceptar se cerrara la ventana, de lo contrario permanecera en ella.
+            @return: No retorna.
+
+            """
             if messagebox.askokcancel("Salir", "¿Quiere salir?"):
                 self.reload = 'close'
                 self.master.destroy()
@@ -133,33 +153,12 @@ class DrawingApplication(tkinter.Frame):
         if(self.isAdmin):
             fileMenu.add_command(label="Cargar...", command=loadFromDataBase)
 
-
-
-
-        def addToFile():
-            filename = tkinter.filedialog.askopenfilename(title="Selecciona una")
-
-            theTurtle.penup()
-            theTurtle.goto(0, 0)
-            theTurtle.pendown()
-            theTurtle.pencolor("#000000")
-            theTurtle.fillcolor("#000000")
-            cmd = PenUpCommand()
-            self.graphicsCommands.append(cmd)
-            cmd = GoToCommand(0, 0, 1, "#000000")
-            self.graphicsCommands.append(cmd)
-            cmd = PenDownCommand()
-            self.graphicsCommands.append(cmd)
-            screen.update()
-
-            #parseJson(filename)
-            #parse(filename)
-
-            for cmd in self.graphicsCommands:
-                cmd.draw(theTurtle)
-
-            screen.update()
         def downloadJson():
+            """
+            @name: downloadJson
+            @param: No recibe parametros.
+            @description: Descarga el dibujo en un archivo JSON.
+            """
             filename = tkinter.filedialog.asksaveasfilename(title="Guardar JSON como...")
             if(filename):
                 saveJson(filename)
@@ -169,6 +168,12 @@ class DrawingApplication(tkinter.Frame):
 
 
         def writeJson(filename):
+            """
+            @name: writeJson
+            @param: fileName
+            @description: Guarda el JSON dentro de la base de datos.
+            @return: No retorna.
+            """
             j = {}
             count = 0
 
@@ -189,6 +194,12 @@ class DrawingApplication(tkinter.Frame):
                 self.database.editDraw(filename, json.dumps(self.contentDraw), self.idUser, self.idDraw)
 
         def saveJson(filename):
+            """
+            @name: saveJson
+            @param fileName: Nombre del archivo.
+            @description: Guarda un archivo en el disco duro según la ruta especificada.
+            @return: No retorna.
+            """
             try:
                 content = json.loads( self.database.getDrawingB(self.idDraw)[0][0])
                 with open(filename, 'w') as file:
@@ -199,18 +210,32 @@ class DrawingApplication(tkinter.Frame):
 
 
         def saveFile():
+            """
+            @name saveFile
+            @param: No recibe parametros.
+            @description: llama a la función writeJson y guarda el archivo según la ruta especificada por el usuario.
+            @return: No retorna.
+            """
             fileName = simpledialog.askstring("Input", "Guardar como...")
 
             if(fileName):
                 writeJson(fileName)
 
-
-
-
         fileMenu.add_command(label="Guardar como...", command=saveFile)
+
         def configuration():
+            """
+            @name: configuration
+            @param: no recibe parametros.
+            @description: Asigna la bandera reload en 'config'lo que hace que se abra la ventana qt5 en modo config.
+            @return No retorna
+            """
             self.reload = 'config'
             self.master.destroy()
+        
+        """
+        Si es administrador se visualizara un boton 'Configurar' en el menu File 
+        """
         if self.isAdmin:
             fileMenu.add_command(label = "Configurar", command = configuration)
 
@@ -255,6 +280,10 @@ class DrawingApplication(tkinter.Frame):
         radiusEntry.pack()
 
 
+        """
+        Funciones desde aquí son obtenidas del libro.
+        Data Structures and Algorithms with Python.
+        """
         def circleHandler():
             cmd = CircleCommand(float(radiusSize.get()), float(widthSize.get()), penColor.get())
             cmd.draw(theTurtle)
@@ -365,12 +394,23 @@ class DrawingApplication(tkinter.Frame):
                 screen.update()
                 screen.listen()
         def saveImg():
+            """
+            @name: saveImg
+            @param: No recibe parametros.
+            @description: Visualiza una imagen segun el dibujo seleccionado.
+            @return: No retorna.
+            """
             ps = screen.getcanvas().postscript( colormode = 'color')
             img = Image.open(io.BytesIO(ps.encode('utf-8')))
             img.show("Dibujo")
             self.database.setVisualitation(self.idDraw, self.idUser, self.fillColor, self.penColor)
 
 
+        """
+        Sí se esta editando un dibujo se genera el dibujo en la pantalla segun el contenido recuperado de la base de datos.
+
+        Si esta visualizando se genera el dibujo en una pequeña ventana a partir de l contenido recuperado de la base de datos.
+        """
         if(self.flag == "edit"):
             loadFile(self.contentDraw)
         elif self.flag == "view":

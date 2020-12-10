@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
+"""
+@autor: Xenia Larissa Alfaro, Juan Carlos Boquin, Matt Saravia, Amilcar Antonio Rodriguez
+@date: 2020/12/09
+"""
 import re
 import turtle
 import tkinter
 import tkinter.colorchooser
 import tkinter.filedialog
 import xml.dom.minidom
-
-
-
+"""
+El código de este modulo fue extraido del libro Data Structures and Algorithms with Python.
+Edición: 2nd, 2015.
+Autor: Kent D. Lee, Steve Hubbard
+Editorial: Springer.
+"""
 class GoToCommand:
     def __init__(self, x, y, width=1, color="black"):
         self.x = x
@@ -30,6 +37,10 @@ class GoToCommand:
         return d
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
 
         d = '"x":%s,"y":%s,"width":%s,"color":"%s","command":"%s"'%(self.x, self.y, self.width, self.color, "GoTo")
         return d
@@ -47,11 +58,12 @@ class CircleCommand:
 
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
         d = '"radius":%s, "width":%s,"color":%s, "command:%s'%(self.radius, self.width, self.color,"Circle")
         return d
-        #return '<Command radius="' + str(self.radius) + '" width="' + \
-            #str(self.width) + '" color="' + self.color + '">Circle</Command>'
-
 
 class BeginFillCommand:
     def __init__(self, color):
@@ -62,9 +74,12 @@ class BeginFillCommand:
         turtle.begin_fill()
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
         d = '"color:%s,command:%s"'%(self.color, "Inicio relleno")
         return d
-        #return '<Command color="' + self.color + '">Inicio relleno </Command>'
 
 class EndFillCommand:
     def __init__(self):
@@ -74,9 +89,12 @@ class EndFillCommand:
         turtle.end_fill()
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
         d = '"command:%s"'%"Fin relleno"
         return d
-        #return "<Command>Fin relleno</Commando"
 
 class PenUpCommand:
     def __init__(self):
@@ -86,8 +104,11 @@ class PenUpCommand:
         turtle.penup()
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
         return '"command:%s"'% "Lápiz arriba"
-        #return "<Command>Lápiz arriba</Commando"
 
 class PenDownCommand:
     def __init__(self):
@@ -97,8 +118,11 @@ class PenDownCommand:
         turtle.pendown()
 
     def __str__(self):
+        """
+        Se redefine el metodo __str__ para que retorne una cadena con formato de diccionario
+        :return: String
+        """
         return '"command":%s'%"Lápiz abajo"
-        #return "<Command>Lápiz abajo</Commando"
 
 class PyList:
     def __init__(self):
