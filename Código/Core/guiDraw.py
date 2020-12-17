@@ -25,6 +25,8 @@ class GuiDraw(QMainWindow):
         self.uiDraw.setupUi(self)
         self.penColor = '#000000'
         self.fillColor = '#000000'
+        self.centerWindow()
+        
     def deleteAllRows(self):
         """
         @name: deleteAllRows
@@ -112,3 +114,15 @@ class GuiDraw(QMainWindow):
             value = self.uiDraw.tablOptDraw.model().data(item)
             listItems.append(value)
         return  listItems
+
+    def centerWindow(self):
+        """
+        @name: centerWindow
+        @param: No recibe parametros
+        @description: Inicia la ventana en el centro de la pantalla.
+        @return: No retorna
+        """
+        screen = self.frameGeometry()
+        ubication = QtWidgets.QDesktopWidget().availableGeometry().center()
+        screen.moveCenter(ubication)
+        self.move(screen.topLeft())

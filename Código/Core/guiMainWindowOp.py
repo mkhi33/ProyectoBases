@@ -21,4 +21,10 @@ class GuiMainOp(QMainWindow):
         super(GuiMainOp, self).__init__(parent)
         self.uiMainOp = Ui_MainWindow()
         self.uiMainOp.setupUi(self)
+        self.centerWindow()
 
+    def centerWindow(self):
+        screen = self.frameGeometry()
+        ubication = QtWidgets.QDesktopWidget().availableGeometry().center()
+        screen.moveCenter(ubication)
+        self.move(screen.topLeft())

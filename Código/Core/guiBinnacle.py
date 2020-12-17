@@ -26,6 +26,7 @@ class GuiBinnacle(QMainWindow):
         super(GuiBinnacle, self).__init__(parent)
         self.uiBinnacle = Ui_MainWindow()
         self.uiBinnacle.setupUi(self)
+        self.centerWindow()
 
     def deleteAllRows(self):
         """
@@ -125,3 +126,14 @@ class GuiBinnacle(QMainWindow):
             listItems.append(value)
         return  listItems
 
+    def centerWindow(self):
+        """
+        @name: centerWindow
+        @param: No recibe parametros
+        @description: Inicia la ventana en el centro de la pantalla.
+        @return: No retorna
+        """
+        screen = self.frameGeometry()
+        ubication = QtWidgets.QDesktopWidget().availableGeometry().center()
+        screen.moveCenter(ubication)
+        self.move(screen.topLeft())

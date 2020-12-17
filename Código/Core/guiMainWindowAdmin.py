@@ -21,3 +21,10 @@ class GUIMainAdmin(QMainWindow):
         super(GUIMainAdmin, self).__init__(parent)
         self.uiMainAdmin = Ui_MainWindow()
         self.uiMainAdmin.setupUi(self)
+        self.centerWindow()
+        
+    def centerWindow(self):
+        screen = self.frameGeometry()
+        ubication = QtWidgets.QDesktopWidget().availableGeometry().center()
+        screen.moveCenter(ubication)
+        self.move(screen.topLeft())

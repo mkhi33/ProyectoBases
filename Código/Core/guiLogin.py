@@ -41,6 +41,7 @@ class GUILogin(QMainWindow):
         # Se crea las instancias de la ventana Login
         self.uiLogin = Ui_MainWindow()
         self.uiLogin.setupUi(self)
+        self.centerWindow()
 
         #Se crean banderas que indican la acción que ejecuta un usuario.
         self.action = ""
@@ -707,4 +708,14 @@ class GUILogin(QMainWindow):
             return True
         return False
         
-
+    def centerWindow(self):
+        """
+        @name: centerWindow
+        @param: No recibe parametros
+        @description: Inicia la ventana en el centro de la pantalla.
+        @return: No retorna
+        """
+        screen = self.frameGeometry()
+        ubication = QtWidgets.QDesktopWidget().availableGeometry().center()
+        screen.moveCenter(ubication)
+        self.move(screen.topLeft())

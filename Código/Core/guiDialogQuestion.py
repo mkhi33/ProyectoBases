@@ -22,4 +22,3 @@ class GuiDialogQuestion(QDialog):
         self.GuiDialogQuestion = Ui_Dialog()
         self.GuiDialogQuestion.setupUi(self)
         
-        
