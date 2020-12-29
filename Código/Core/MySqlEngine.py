@@ -41,6 +41,7 @@ class MySqlEngine:
         @description: Inicia la base de datos con los parametros de conexión, Instanciando un cursor
         return: No retorna
         """
+
         self.con = mysql.connector.connect(
             host = self.server,
             port = self.port,
@@ -48,6 +49,7 @@ class MySqlEngine:
             password = self.password,
             database = self.database
         )
+
         self.link = self.con.cursor()
 
     def close(self):

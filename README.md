@@ -3,6 +3,14 @@ Documentación Proyecto Base de Datos I IIIPAC-2020 UNAH
 - @author Larissa Alfaro, Juan Boquín, Amilcar Rodriguez, Matt Saravia
 - @date 2020/08/18
 
+# **Instalar dependencias**
+- En la carpeta raiz existe un archivo 'requeriments.txt'
+- Dentro de la carpeta raiz en una termina ejecutar el siguiente comando:
+
+	pip3 install -r requeriments.txt
+
+- El comando anterior instalara las dependencias necesarias para ejecutar el programa.
+
 # **SQL**
 
 ## **Base de Datos**
