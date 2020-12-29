@@ -7,7 +7,9 @@ Documentación Proyecto Base de Datos I IIIPAC-2020 UNAH
 - En la carpeta raiz existe un archivo 'requeriments.txt'
 - Dentro de la carpeta raiz en una termina ejecutar el siguiente comando:
 
-	pip3 install -r requeriments.txt
+
+		pip3 install -r requeriments.txt
+	
 
 - El comando anterior instalara las dependencias necesarias para ejecutar el programa.
 
