@@ -27,7 +27,7 @@ class MySqlEngine:
 
         """
 
-        self.server = config.server
+        self.server = config.host
         self.port = config.port
         self.user = config.user
         self.password = config.password

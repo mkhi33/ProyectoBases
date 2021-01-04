@@ -15,7 +15,7 @@ class ConnectionConfig:
 
         @param sesionConfig: Es el nombre de la sesión en el archivo confif.ini (ConfigurationA/ ConfigurationB)
         """
-        self.server = ""
+        self.host = ""
         self.port = ""
         self.user = ""
         self.password = ""
@@ -43,7 +43,7 @@ class ConnectionConfig:
         config.set("ConfigurationB", "user", "admin")
         config.set("ConfigurationB", "password", "admin")
         config.set("ConfigurationB", "database", "DataBaseB")
-        with open('config/config.ini', 'w') as configfile:
+        with open('Core/config/config.ini', 'w') as configfile:
             config.write(configfile)
 
     def getConfig(self, configuration):
@@ -60,6 +60,7 @@ class ConnectionConfig:
         self.user = config.get(configuration, "user")
         self.password = config.get(configuration, "password")
         self.database = config.get(configuration, "database")
+
 
 
 
