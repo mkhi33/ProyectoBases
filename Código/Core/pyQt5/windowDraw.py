@@ -70,7 +70,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnOpeNewDraw:hover {\n"
 "    background-color: black;\n"
-"    cursor:pointer;\n"
 "color: white;\n"
 "}\n"
 "")
@@ -90,7 +89,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnOptEditDraw:hover {\n"
 "    background-color: black;\n"
-"    cursor:pointer;\n"
 "color:white;\n"
 "}\n"
 "")
@@ -110,7 +108,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnOpDeleteDraw:hover {\n"
 "    background-color: black;\n"
-"    cursor:pointer;\n"
 "color: white;\n"
 "}\n"
 "")
@@ -130,7 +127,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnOpViewDraw:hover {\n"
 "    background-color: black;\n"
-"    cursor:pointer;\n"
 "color: white;\n"
 "}\n"
 "")

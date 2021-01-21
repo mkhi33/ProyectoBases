@@ -28,7 +28,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnManageDraw:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnManageDraw.setObjectName("btnManageDraw")
@@ -46,7 +45,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnManageUsr:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnManageUsr.setObjectName("btnManageUsr")
@@ -77,7 +75,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnViewBinnacle:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnViewBinnacle.setObjectName("btnViewBinnacle")
@@ -110,7 +107,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnExit:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnExit.setObjectName("btnExit")

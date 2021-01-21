@@ -100,7 +100,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnLogin:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnLogin.setObjectName("btnLogin")

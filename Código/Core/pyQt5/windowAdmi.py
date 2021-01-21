@@ -179,7 +179,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnNewUser:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnNewUser.setObjectName("btnNewUser")
@@ -197,7 +196,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnEditUser:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnEditUser.setObjectName("btnEditUser")
@@ -215,7 +213,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnDeleteUser:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnDeleteUser.setObjectName("btnDeleteUser")
@@ -233,7 +230,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnSaveUser:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnSaveUser.setObjectName("btnSaveUser")
@@ -300,7 +296,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnCancel:hover {\n"
 "    background-color: rgb(22, 184, 39);\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnCancel.setObjectName("btnCancel")
@@ -354,7 +349,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnFillColor:hover {\n"
 "    background-color: #8174A8;\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnFillColor.setObjectName("btnFillColor")
@@ -372,7 +366,6 @@ class Ui_MainWindow(object):
 "\n"
 "QPushButton#btnPenColor:hover {\n"
 "    background-color: #8174A8;\n"
-"    cursor:pointer;\n"
 "}\n"
 "")
         self.btnPenColor.setObjectName("btnPenColor")
